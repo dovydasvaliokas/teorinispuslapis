@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/styles/styles.css">
+    <link rel="stylesheet" href="../assets/styles/prism.css">
+    <script src="../assets/scripts/prism.js"></script>
+    <script src="../assets/scripts/script.js"></script>
+    <title>1 pamoka. HTML žymės.</title>
+</head>
+<body>
+    <div class="page-container">
+        <div class="sidebar-menu" id="sidebarMenu">
+            <img id="sidebarArrow" class="arrow" src="../assets/img/menu-arrow-right.jpg" alt="Rodyklė rodanti į dešinę pusę, skirta atidaryti šoniniam meniu">
+            <div class="sidebar-menu-text bold-text">SPAUSKITE NORINT ATIDARYTI MENIU</div>
+            <ul id="sidebarMenuList">
+                <li><a href="#section1">HTML Įvadas</a></li>
+                <li><a href="#section2">HTML sintaksė (pagrindinės taisyklės)</a></li>
+                <li><a href="#section3">Pagrindinės HTML žymės</a></li>
+                <li><a href="#section4">HTML minimalus pavyzdys</a></li>
+                <li><a href="#section5">HTML pradinės TURINIO žymės</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <!-- HTML Įvadas-->
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section1">HTML Įvadas</h3>
+                </div>
+                <div class="theory-text">
+                    <p>Kuriant tinklalapius yra naudojama HTML žymėjimo kalba. HTML arba Hyper Text Marking Language (Hiper Teksto Žymėjimo Kalba) yra nurodomoji kalba, kuria yra nurodoma KĄ atvaizduoti tinklalapyje.</p>
+                     <p>Su HTMl kalba yra įmanomi limituoti stiliaus nustatymai (spalva, aukštis, plotis ir panašiai), tačiau juos pagrinde pritaikysime naudojant CSS kalbą, kurią mokinsimės vėliau.</p>
+                </div>
+                <div class="theory-text">
+                    <p>Todėl, pagrinde sakome, jog:</p>
+                    <p>HTML kalba nusakome KĄ atvaizduosime, pavyzdžiui:</p>
+                    <ul class="example-list">
+                        <li>pastraipą </li>
+                        <li>lentelę</li>
+                        <li>bloką</li>
+                        <li>paveiksliuką</li>
+                        <li>langelį</li>
+                        <li>nuorodą</li>
+                        <li>ir t.t.</li>
+                    </ul>
+                    <p>CSS kalba nusakome KAIP atvaizduoti, pavyzdžiui:</p>
+                    <ul class="example-list">
+                        <li>elemento dydį</li>
+                        <li>elemento spalvą</li>
+                        <li>rėmelius</li>
+                        <li>lygiavimą</li>
+                        <li>ir t.t.</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- HTML Sintaksė-->
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section2">HTML sintaksė (pagrindinės taisyklės)</h3>
+                </div>
+
+                <div class="theory-text">
+                    <p>Puslapis yra kuriamas rašant HTML kodą. HTML kodą rašysime į HTML failą. Kaip susikurti HTML failą aptarsime toliau, tačiau kaip mes rašytume kodą? Kokios yra HTML kalbos taisyklės?</p>
+
+                    <p>HTML kalba yra sudarinėjama <span class="important-word-link">žymių</span> pagalba.</p>
+                    
+                    <p>Žymės yra sutarti žymėjimai, kurie nusako kokį <span class="important-word-link">elementą</span> atvaizduoti puslapyje.</p>
+
+                    <p>Elementai, tai yra HTML "daiktai", kuriuos rodo puslapyje. Pavyzdžiui: pastraipa, antraštė, lentelė, sąrašas ir t.t.</p>
+
+                    <p>Aprašant elementą HTML kalba, yra svarbiausios 3 dalys:</p>
+                    
+                    <ol class="example-list pad-bot-10">
+                        <li><p><span class="bold-text" id="pradineZyme">Pradinė žymė</span> - Nusako koks elementas yra sukuriamas/atvaizduojamas. Pavyzdžiui: </p>
+                            <pre> <code class="language-html">&#x3C;p&#x3E; yra pastraipos žymė</code></pre>
+                        </li>
+                        <li><p><span class="bold-text" id="turinys">Elemento turinys</span> - tai tekstas tarp dviejų elemento žymių. Turinys yra dažniausiai to elemento tekstas - pastraipos turinys bus tekstas, atvaizduojamas pastraipoje. Antraštės elemento turinys bus tekstas, atvaizduojamas pastraipoje. Nuorodos turinys bus tekstas, kuris yra atvaizduojamas kaip nuoroda į kitą puslapį. Pavyzdžiui:</p>
+                            <pre><code class="language-html">&#x3C;p&#x3E;</code><span class="bold-text">Šios pastraipos tekstas kurį galės skaityti visi kiti</span><code class="language-html">&#x3C;/p&#x3E;</code> </pre>
+                            Šiame pavyzdyje paryškintas tekstas yra pastraipos elemento turinys.
+                        </li>
+                        <li>
+                            <p><span class="bold-text" id="uzdaromojiZyme">Elemento uždaromoji žymė</span> - tai žymė, kuri nurodo, jog yra šio elemento "pabaiga". Nenurodę elemento pabaigos, programa/kompiuteris galvos, jog elementas tęsiasi iki pat galo. Tokią klaidą padarę vietoj, pavyzdžiui, trijų pastraipų einančių šalia/greta mes gausime pastraipą, kuri yra kitos pastraipos viduje, kuri yra dar kitos pastraipos viduje. Todėl nurodyti baigiamąją žymę yra svarbu.</p>
+                            <p>Uždaromoji žymė yra rašoma panašiai kaip ir atidaromoji, tik po mažiau ženklo ("&#x3C;") yra dedamas pasviras brūkšniukas į dešinę ("/"). Pavyzdžiui:</p>
+                            <pre> <code class="language-html">&#x3C;/p&#x3E; yra pastraipos UŽDAROMOJI žymė</code></pre>
+                        </li>
+                    </ol>
+
+                    <p>Taigi, žymių principu, mes sudarinėsime HTML elementus ir visą puslapį. Vėliau, galėsime tiems elementams priskirti spalvas, dydžius, teksto šriftą ir t.t., bet tai, kaip minėta, bus CSS pamokose.</p>
+                </div>
+            </div>
+            <!-- Pagrindinės HTML žymės-->
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section3">Pagrindinės HTML žymės</h3>
+                </div>
+            
+                <div class="theory-text">
+                    <p>Kiekviename, taisyklingam HTML puslapyje/faile PRIVALO būti šios žymės:</p>
+                    <div class="code-div">
+                        <code class="language-html">&#x3C;!DOCTYPE html&#x3E; - yra "speciali" žymė, kuri neturi uždaromosios žymės. Ši žymė yra būtina HTML failo pradžioje, kadangi ši žymė nurodys (naršyklei), jog šis failas yra HTML failas.</code>
+                    </div>
+
+                    <div class="code-div">
+                        <code class="language-html">&#x3C;html&#x3E; &#x3C;/html&#x3E;</code> - <span class="bold-text">html</span> žymė yra pagrindinė viso dokumento žymė, kuri nurodo, jog jos <span class="bold-text">turinyje</span> bus rašomas HTML kodas.
+                    </div>
+
+                    <div class="code-div">
+                        <code class="language-html">&#x3C;head&#x3E; &#x3C;/head&#x3E;</code> - <span class="bold-text">head</span> žymė yra  pagrindinė <span class="bold-text">konfiguracinė</span> žymė. Jos turinyje yra kuriamos kitos žymės, kurios nustato puslapio konfiguracinius parametrus, pvz.: puslapio pavadinimą, teksto koduotę (lotyniškų, lietuviškų, kitokių kalbų palaikymą), papildomų failų (CSS, JS) pridėjimą. Apie konkrečias <code class="language-html">&#x3C;head&#x3E;</code> "vidines" žymes mokinsimės toliau.
+                    </div>
+
+                    <div class="code-div">
+                        <code class="language-html">&#x3C;body&#x3E; &#x3C;/body&#x3E;</code> - <span class="bold-text">body</span> - žymė yra pagrindinė <span class="bold-text">dokumento/puslapio turinio</span> žymė. Body turinyje rašysime visas kitas puslapio turinio žymes. Pavyzdžiui: pastraipa, antraštė, lentelė ir t.t.
+                    </div>
+                </div>
+            </div>
+            <!-- Minimalus pavyzdys -->
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section4">HTML minimalus pavyzdys</h3>
+                </div>
+            
+                <div class="theory-text">
+                    <div class="code-text">
+                        <pre><code class="language-html">&#x3C;!DOCTYPE html&#x3E;
+&#x3C;html&#x3E;
+    &#x3C;head&#x3E;
+        &#x3C;title&#x3E;Pirmas pavyzdys&#x3C;/title&#x3E;
+    &#x3C;/head&#x3E;
+    &#x3C;body&#x3E;
+        &#x10C;ia yra pirmo pavyzd&#x17E;io puslapis. Vizualiai matomas tik tekstas, ta&#x10D;iau kode yra sura&#x161;ytos pagrindin&#x117;s &#x17E;ym&#x117;s, kurios u&#x17E;tikrina puslapio veikim&#x105;.
+    &#x3C;/body&#x3E;
+&#x3C;/html&#x3E;</code></pre>
+                    </div>
+                    <p>Norint pamatyti kaip šis puslapis atrodo, spauskite: <a href="pirmas_pavyzdys.html">Čia</a></p>
+                    <p>Atidarius pavyzdžio puslapį, jame yra tik tai tekstas, kuris buvo įrašytas <code class="language-html">&#x3C;body&#x3E;</code> elemento turinyje. Tačiau, visos kitos žymės vis vien yra failo viduje ir jos padeda naršyklei atvaizduoti puslapį.</p>
+                    <p>Norėdami pamatyti "gryną" kodą - t.y. su visomis žymėmis ir kitais nustatymais, mums reikėtų atsidaryti naršyklės "developer tools".</p>
+                    <p>Naudojant "Google Chrome" arba "Mozilla Firefox" naršyklės "devtools" galime atidaryti bet kuriame puslapyje paspaudę "F12" klaviatūros mygtuką arba paspaudę ant bet kurios puslapio vietos dešinį mygtuką ir pasirinkę "Inspect" (lietuviškai "Apžiūrėti")</p>
+                    <p>Atsidarę devtools, turėtume matyti tokius langus:</p>
+                    <img class="w-100" src="../assets/img/pam1/ss1.png" alt="Pirmojo pavyzdžio 'screenshot'">
+                    <p>Kairėje pusėje yra mūsų puslapis. Dešinėje pusėje yra devtools. "Elements" skiltyje mes matome mūsų puslapio <span class="bold-text">struktūrą:</span></p>
+                    <img src="../assets/img/pam1/ss2.png" alt="Pirmojo pavyzdžio 'elements' dalis">
+                    Užvedus ant elemento "Elements" skiltyje, jums jį "pažymės" ir mūsų puslapyje. Tačiau, pas mus yra tik tai vienas "vizualus" elementas "body". Tad jei užvesime ant "body" elemento mums pažymės, kurioje puslapio vietoja yra body (melsva spalva), pažymės body "padding'us" (žalsva spalva, jų dabar nėra bei apie juos šnekėsime vėliau CSS) bei taip pat pažymės paraštes (kremine/ruda spalva, angliškai "margin" apie jas taip pat šnekėsime vėliau CSS):
+                    <img src="../assets/img/pam1/ss3.png" alt="Paryškintas body elementas, kai ant jo užvedame 'elements' dalyje">
+                </div>
+            </div>
+            <!--HTML Pradinės TURINIO žymės-->
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section5">HTML pradinės TURINIO žymės</h3>
+                </div>
+            
+                <div class="theory-text">
+                    <p>Mes pasižiūrėjome pagrindines HTML dokumento žymes, kurios nusako failo paskirtį (<code class="language-html">&#x3C;html&#x3E;</code>), pasižiūrėjome pagrindinę konfiguracijos žymę (<code class="language-html">&#x3C;head&#x3E;</code>) bei pasižiūrėjome pagrindinę <span class="bold-text">turinio</span> žymę (<code class="language-html">&#x3C;body&#x3E;</code>)</p>
+                    <p>Norint puslapyje atvaizduoti turinį, reikės į <code class="language-html">&#x3C;body&#x3E;</code> elemento vidų (tarp žymių) įrašyti turinio žymes, pvz. pastraipas, antraštes, paveiksliukus ir t.t.</p>
+                </div>
+            </div>
+            <!-- Pastraipos žymė-->
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section5-1">Pastraipos žymė</h3>
+                </div>
+            
+                <div class="theory-text">
+                    <p>Pastraipa yra žymima <code class="language-html">&#x3C;p&#x3E; &#x3C;/p&#x3E;</code> žymėmis.</p>
+                    <p>Tarp žymių (arba sakoma: "elemento turinyje") rašytume tekstą, kurį norime įdėti į pastraipą. Kitaip sakant, jeigu norime, jog tas tekstas būtų atvaizduojamas kaip pastraipa, tą tekstą turime įrašyti tarp pastraipos žymių. Pavyzdys:</p>
+                    <p><pre><code class="language-html">&#x3C;p&#x3E;&#x160;is tekstas yra pirmos pastraipos tekstas&#x3C;/p&#x3E;
+&#x10C;IA JAU YRA PASIBAIGUS PASTRAIPA IR &#x160;IS TEKSTAS N&#x116;RA PASTRAIPOS DALIS. SEKAN&#x10C;IOJE EILUT&#x116;JE BUS DAR VIENA PASTRAIPA:
+&#x3C;p&#x3E; &#x160;tai &#x161;ioje vietoje yra dar viena pastraipa. Ir ji baigiasi &#x10D;ia. &#x3C;/p&#x3E;</code></pre></p>
+                    <p>Norint pažiūrėti kaip šis pavyzdys atrodo, spauskite <a href="antras_pavyzdys.html">čia</a></p>
+                    <p>Paspaudę ant pavyzdžio, pastebėsite, jog "p" raidės (žymės) nėra atvaizduojamos, kadangi jos tik tai pažymi, kad ten bus pastraipa. Taip pat, jeigu palyginsite pavyzdį naujame puslapyje su pavyzdžiu šiame puslapyje truputį aukščiau, tai pastebėsite, jog pastraipos turi tam tikras savybes: jos turi paraštes (tarpai tarp eilučių) bei kiekviena pastraipa prasidės iš naujos eilutės. Jeigu paspausime "Enter" klavišą rašydami kodą - naujos eilutės puslapyje nepadarysime, todėl neretai norint pradėti tekstą iš naujos eilutės naudotume naują pastraipą.</p>
+                </div>
+            </div>
+            <!-- Antraštės žymė -->
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section5-2">Antraštės žymė</h3>
+                </div>
+            
+                <div class="theory-text">
+                    <p>Antraštės yra kelių skirtingų lygių (panašiai kaip ir Word'e antraštės yra skirtingų lygių, viena būtų naudojama skyriams, kita poskyriams ir t.t.)</p>
+                    <p>Panašus principas būtų pritaikomas ir puslapių kūrime: aukščiausio (svarbiausio) lygio antraštę dažniausiai naudotume puslapio tituliniui pavadinimui, antro lygio antraštę tam tikram puslapio skyriaus/sekcijos pavadinimui, trečio lygio antraštę naudotume tos sekcijos poskyriams ir t.t.</p>
+                    <p>Tiesa, griežtų taisyklių kaip ir kur naudoti antraštes nėra, tai labiau būtų tiesiog rekomenduojami nurodymai, tačiau kartais naudotume ir skirtingų lygių antraštes skirtingiems dalykams.</p>
+                    <p>Kaip sukurti antraštes? Antraščių žymės yra:</p>
+                    <p>Pirmo (aukščiausio) lygio antraštės žymės yra: <code class="language-html">&#x3C;h1&#x3E; &#x3C;/h1&#x3E;</code></p>
+                    <p>Antro lygio antraštės žymės yra: <code class="language-html">&#x3C;h2&#x3E; &#x3C;/h2&#x3E;</code></p>
+                    <p>Trečio lygio antraštės žymės yra: <code class="language-html">&#x3C;h3&#x3E; &#x3C;/h3&#x3E;</code></p>
+                    <p>Ketvirto lygio antraštės žymės yra: <code class="language-html">&#x3C;h4&#x3E; &#x3C;/h4&#x3E;</code></p>
+                    <p>Penkto lygio antraštės žymės yra: <code class="language-html">&#x3C;h5&#x3E; &#x3C;/h5&#x3E;</code></p>
+                    <p>Šešto lygio antraštės žymės yra: <code class="language-html">&#x3C;h6&#x3E; &#x3C;/h6&#x3E;</code></p>
+                    <p>Septinto (žemiausio) lygio antraštės žymės yra: <code class="language-html">&#x3C;h7&#x3E; &#x3C;/h7&#x3E;</code></p>
+                    <p>Pavyzdys:</p>
+                    <pre><code class="language-html">&#x3C;h1&#x3E;&#x10C;ia yra puslapio titulinis&#x3C;/h1&#x3E;
+&#x3C;h2&#x3E;&#x10C;ia yra puslapio Naujienos&#x3C;/h2&#x3E;
+&#x3C;h3&#x3E;Puslapis &#x161;iandien buvo atnaujintas!!&#x3C;/h3&#x3E;
+&#x3C;h4&#x3E;Vienas i&#x161; atnaujinim&#x173; pagreitina puslap&#x12F; 40% procent&#x173;&#x3C;/h4&#x3E;</code></pre>
+                    <p>Norint pamatyti pavyzdį vizualiai, spauskite <a href="trecias_pavzdys.html">čia</a></p>
+                    <p>Matome, jog antraščių tekstas yra paryškintas bei kiekvienos antraštės teksto dydis yra atitinkamai pagal jos lygį.</p>
+                </div>
+            </div>
+            <!-- Užduotys -->
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section6">Užduotys</h3>
+                </div>
+            
+                <!-- Pirma užduotis-->
+                <div class="theory-text">
+                    <ol class="task-list">
+                        <li>Pasileiskite Visual Studio Code programą (spauskite ant nuorodos, jeigu jos dar neturite ir norite išsiaiškinti kaip įsirašyti). Susikurkite naują projektą ir jame susikurkite naują HTML failą.</li>
+                        <ol>
+                            <li>Norint susikurti naują projektą - susikurkite naują aplanką. Naują aplanką užvadinkite "Pirmas projektas" (arba bet kokiu kitu vardu)</li>
+                            <li>Atidarykite tą aplanką per Visual Studio Code programą. Tą galite padaryti divem būdais:</li>
+                            <ol>
+                                <span></span>
+                                <li>Spauskite ant pelės dešinį pelės klavišą ir pasirinkite "Open with Visual Studio Code" parametrą <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/pam1/ss4.jpg" alt=""></div></span></li>
+                                <p>Arba</p>
+                                <li>Atsidarykite Visual Studio Code programą. Viršutinėje meniu juostoje spauskite File --> Open Folder --> pasirinkite savo aplanką.<span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/pam1/ss5.jpg" alt=""></div></span></li>
+                            </ol>
+                        </ol>
+                        <li>Susikurkite naują HTML Failą. Norint tai padaryti, Visual Studio Code programos viršutinėje meniu juostoje spauskite File --> New File <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/pam1/ss6.jpg" alt=""></div></span></li>
+                        <li>Susirašykite pagrindines HTML žymes <code class="language-html">(&#x3C;!DOCTYPE html&#x3E;, &#x3C;html&#x3E;, &#x3C;head&#x3E;, &#x3C;body&#x3E;)</code>. Kai surašysite visas žymes, paleiskite puslapį. Puslapis paleidžiamas programos meniu pasirenkant Run --> Run Without Debugging pasirinkimą arba spaudžiant klavišus CTRL + F5 <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/pam1/ss7.jpg" alt=""></div></span></li>
+                        <div class="spoiler">
+                            <div class="spoiler-content">
+                                <pre><code class="language-html">&#x3C;!DOCTYPE html&#x3E;
+&#x3C;html&#x3E;
+    &#x3C;head&#x3E;
+
+    &#x3C;/head&#x3E;
+    &#x3C;body&#x3E;
+        
+    &#x3C;/body&#x3E;
+&#x3C;/html&#x3E;
+                                </code></pre>
+                            </div>
+                            <div class="spoiler-button">
+                                <button></button>
+                            </div>
+                        </div>
+                        <li>Įsirašykite <code class="language-html">&#x3C;title&#x3E; &#x3C;/title&#x3E;</code> žymę į <code class="language-html">&#x3C;head&#x3E;</code> žymės vidų. (Pastaba: kai sakome "į žymės vidų", dažniausiai turime omenyje į žymės <a href="#turinys">turinį</a> arba kitaip sakant į tarpą tarp <a href="#pradineZyme">atidaromosios žymės</a> ir <a href="uzdaromojiZyme">uždaromiosios žymės</a></li>
+                        <div class="spoiler">
+                            <div class="spoiler-content">
+                                <pre><code class="language-html">&#x3C;!DOCTYPE html&#x3E;
+&#x3C;html&#x3E;
+    &#x3C;head&#x3E;
+        &#x3C;title&#x3E; &#x3C;/title&#x3E;
+    &#x3C;/head&#x3E;
+    &#x3C;body&#x3E;
+        
+    &#x3C;/body&#x3E;
+&#x3C;/html&#x3E;
+                                </code></pre>
+                            </div>
+                            <div class="spoiler-button">
+                                <button></button>
+                            </div>
+                        </div>
+                        <li>Į <code class="language-html">&#x3C;title&#x3E;</code> žymės vidų (turinį) įrašykite "Pirmasis mūsų puslapis" (be kabučių)</li>
+                        <div class="spoiler">
+                            <div class="spoiler-content">
+                                <pre><code class="language-html">&#x3C;!DOCTYPE html&#x3E;
+&#x3C;html&#x3E;
+    &#x3C;head&#x3E;
+        &#x3C;title&#x3E;Pirmasis m&#x16B;s&#x173; puslapis&#x3C;/title&#x3E;
+    &#x3C;/head&#x3E;
+    &#x3C;body&#x3E;
+        
+    &#x3C;/body&#x3E;
+&#x3C;/html&#x3E;
+                                </code></pre>
+                            </div>
+                            <div class="spoiler-button">
+                                <button></button>
+                            </div>
+                        </div>
+                        <li>Toliau, &#x3C;body&#x3E; dalyje susikurkite dvi <a href="#section5-1">pastraipas</a></li>
+                        <div class="spoiler">
+                            <div class="spoiler-content">
+                                <pre><code class="language-html">&#x3C;!DOCTYPE html&#x3E;
+&#x3C;html&#x3E;
+    &#x3C;head&#x3E;
+        &#x3C;title&#x3E;Pirmasis m&#x16B;s&#x173; puslapis&#x3C;/title&#x3E;
+    &#x3C;/head&#x3E;
+    &#x3C;body&#x3E;
+        &#x3C;p&#x3E;&#x3C;/p&#x3E;
+        &#x3C;p&#x3E;&#x3C;/p&#x3E;
+    &#x3C;/body&#x3E;
+&#x3C;/html&#x3E;
+                                </code></pre>
+                            </div>
+                            <div class="spoiler-button">
+                                <button></button>
+                            </div>
+                        </div>
+                        <li>Į pirmąją pastraipą įraškite: "Šiandien yra sekmadienis"</li>
+                        <div class="spoiler">
+                            <div class="spoiler-content">
+                                <pre><code class="language-html">&#x3C;!DOCTYPE html&#x3E;
+&#x3C;html&#x3E;
+    &#x3C;head&#x3E;
+        &#x3C;title&#x3E;Pirmasis m&#x16B;s&#x173; puslapis&#x3C;/title&#x3E;
+    &#x3C;/head&#x3E;
+    &#x3C;body&#x3E;
+        &#x3C;p&#x3E;&#x160;iandien yra sekmadienis&#x3C;/p&#x3E;
+        &#x3C;p&#x3E;&#x3C;/p&#x3E;
+    &#x3C;/body&#x3E;
+&#x3C;/html&#x3E;
+                                </code></pre>
+                            </div>
+                            <div class="spoiler-button">
+                                <button></button>
+                            </div>
+                        </div>
+                        <li>Į antrąją pastraipą įrašykite: "Rytoj bus pirmadienis"</li>
+                        <div class="spoiler">
+                            <div class="spoiler-content">
+                                <pre><code class="language-html">&#x3C;!DOCTYPE html&#x3E;
+&#x3C;html&#x3E;
+    &#x3C;head&#x3E;
+        &#x3C;title&#x3E;Pirmasis m&#x16B;s&#x173; puslapis&#x3C;/title&#x3E;
+    &#x3C;/head&#x3E;
+    &#x3C;body&#x3E;
+        &#x3C;p&#x3E;&#x160;iandien yra sekmadienis&#x3C;/p&#x3E;
+        &#x3C;p&#x3E;Rytoj bus pirmadienis&#x3C;/p&#x3E;
+    &#x3C;/body&#x3E;
+&#x3C;/html&#x3E;
+                                </code></pre>
+                            </div>
+                            <div class="spoiler-button">
+                                <button></button>
+                            </div>
+                        </div>
+                    </ol>
+                    <p>Vizualiai jūsų puslapis atrodys: <a href="pirma_uzduotis.html">Puslapio nuoroda</a> (spauskite nuorodą kairėje, norint atsidaryti puslapį)</p>
+                    <p class="d-inline-b">Vizuali jūsų puslapio nurooda:</p><span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/pam1/ss8.jpg" alt=""></div></span>
+                    <p >Užduoties sprendimo kodas (spauskite "Rodyti kodą", norint pamatyti sprendimo kodą (atsakymą)):</p>
+
+                    <div class="spoiler">
+                        <div id="spoilerContent1" class="spoiler-content">
+                            <pre><code class="language-html">&#x3C;!DOCTYPE html&#x3E;
+&#x3C;html&#x3E;
+&#x3C;head&#x3E;
+    &#x3C;title&#x3E;Pirmasis m&#x16B;s&#x173; puslapis&#x3C;/title&#x3E;
+&#x3C;/head&#x3E;
+&#x3C;body&#x3E;
+    &#x3C;p&#x3E;&#x160;iandien yra sekmadienis&#x3C;/p&#x3E;
+    &#x3C;p&#x3E;Rytoj bus pirmadienis&#x3C;/p&#x3E;
+&#x3C;/body&#x3E;
+&#x3C;/html&#x3E;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button id="spoilerButton1"></button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="theory-text">
+                    <ol class="task-list">
+                        <li>Susikurkite naują projektą</li>
+                    </ol>
+
+                    <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+</body>
+</html>
