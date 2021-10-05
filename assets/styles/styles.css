@@ -168,7 +168,14 @@ div.theory-text img {
     display: block;
 }
 
-/* SPOILER STILIAI */
+/*------------------------------------------------- SPOILER STILIAI------------------------------------- */
+
+/* Bendrai pre > code */
+pre > code {
+    white-space: pre-wrap;
+}
+
+/* Spoiler paprastas */
 .spoiler {
     background-color: #c9c9c9;
 }
