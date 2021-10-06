@@ -170,9 +170,13 @@ div.theory-text img {
 
 /*------------------------------------------------- SPOILER STILIAI------------------------------------- */
 
+pre {
+    overflow: scroll;
+}
+
 /* Bendrai pre > code */
 pre > code {
-    white-space: pre-wrap;
+    white-space: pre-wrap!important;            /* Rewriting PRISM styles, since the default is pre */
 }
 
 /* Spoiler paprastas */
