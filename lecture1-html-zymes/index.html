@@ -203,6 +203,181 @@
                 </div>
             </div>
 
+            <!-- Užduotys -->
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section6">Užduotys</h3>
+                </div>
+
+                <!-- Pirma užduotis-->
+                <div class="theory-text">
+                    <ol class="task-list">
+                        <li>Pasileiskite Visual Studio Code programą (spauskite ant nuorodos, jeigu jos dar neturite ir norite išsiaiškinti kaip įsirašyti). Susikurkite naują projektą ir jame susikurkite naują HTML failą.</li>
+                        <ol>
+                            <li>Norint susikurti naują projektą - susikurkite naują aplanką. Naują aplanką užvadinkite "Pirmas projektas" (arba bet kokiu kitu vardu)</li>
+                            <li>Atidarykite tą aplanką per Visual Studio Code programą. Tą galite padaryti divem būdais:</li>
+                            <ol>
+                                <span></span>
+                                <li>Spauskite ant pelės dešinį pelės klavišą ir pasirinkite "Open with Visual Studio Code" parametrą <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/pam1/ss4.jpg" alt=""></div></span></li>
+                                <p>Arba</p>
+                                <li>Atsidarykite Visual Studio Code programą. Viršutinėje meniu juostoje spauskite File --> Open Folder --> pasirinkite savo aplanką.<span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/pam1/ss5.jpg" alt=""></div></span></li>
+                            </ol>
+                        </ol>
+                        <li>Susikurkite naują HTML Failą. Norint tai padaryti, Visual Studio Code programos viršutinėje meniu juostoje spauskite File --> New File <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/pam1/ss6.jpg" alt=""></div></span></li>
+                        <li>Susirašykite pagrindines HTML žymes <code class="language-html">(&#x3C;!DOCTYPE html&#x3E;, &#x3C;html&#x3E;, &#x3C;head&#x3E;, &#x3C;body&#x3E;)</code>. Kai surašysite visas žymes, paleiskite puslapį. Puslapis paleidžiamas programos meniu pasirenkant Run --> Run Without Debugging pasirinkimą arba spaudžiant klavišus CTRL + F5 <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/pam1/ss7.jpg" alt=""></div></span></li>
+                        <div class="spoiler">
+                            <div class="spoiler-content">
+                                <pre><code class="language-html">&#x3C;!DOCTYPE html&#x3E;
+&#x3C;html&#x3E;
+    &#x3C;head&#x3E;
+
+    &#x3C;/head&#x3E;
+    &#x3C;body&#x3E;
+
+    &#x3C;/body&#x3E;
+&#x3C;/html&#x3E;
+                                </code></pre>
+                            </div>
+                            <div class="spoiler-button">
+                                <button></button>
+                            </div>
+                        </div>
+                        <li>Įsirašykite <code class="language-html">&#x3C;title&#x3E; &#x3C;/title&#x3E;</code> žymę į <code class="language-html">&#x3C;head&#x3E;</code> žymės vidų. (Pastaba: kai sakome "į žymės vidų", dažniausiai turime omenyje į žymės <a href="#turinys">turinį</a> arba kitaip sakant į tarpą tarp <a href="#pradineZyme">atidaromosios žymės</a> ir <a href="uzdaromojiZyme">uždaromiosios žymės</a></li>
+                        <div class="spoiler">
+                            <div class="spoiler-content">
+                                <pre><code class="language-html">&#x3C;!DOCTYPE html&#x3E;
+&#x3C;html&#x3E;
+    &#x3C;head&#x3E;
+        &#x3C;title&#x3E; &#x3C;/title&#x3E;
+    &#x3C;/head&#x3E;
+    &#x3C;body&#x3E;
+
+    &#x3C;/body&#x3E;
+&#x3C;/html&#x3E;
+                                </code></pre>
+                            </div>
+                            <div class="spoiler-button">
+                                <button></button>
+                            </div>
+                        </div>
+                        <li>Į <code class="language-html">&#x3C;title&#x3E;</code> žymės vidų (turinį) įrašykite "Pirmasis mūsų puslapis" (be kabučių)</li>
+                        <div class="spoiler">
+                            <div class="spoiler-content">
+                                <pre><code class="language-html">&#x3C;!DOCTYPE html&#x3E;
+&#x3C;html&#x3E;
+    &#x3C;head&#x3E;
+        &#x3C;title&#x3E;Pirmasis m&#x16B;s&#x173; puslapis&#x3C;/title&#x3E;
+    &#x3C;/head&#x3E;
+    &#x3C;body&#x3E;
+
+    &#x3C;/body&#x3E;
+&#x3C;/html&#x3E;
+                                </code></pre>
+                            </div>
+                            <div class="spoiler-button">
+                                <button></button>
+                            </div>
+                        </div>
+                        <li>Toliau, &#x3C;body&#x3E; dalyje susikurkite dvi <a href="#section5-1">pastraipas</a></li>
+                        <div class="spoiler">
+                            <div class="spoiler-content">
+                                <pre><code class="language-html">&#x3C;!DOCTYPE html&#x3E;
+&#x3C;html&#x3E;
+    &#x3C;head&#x3E;
+        &#x3C;title&#x3E;Pirmasis m&#x16B;s&#x173; puslapis&#x3C;/title&#x3E;
+    &#x3C;/head&#x3E;
+    &#x3C;body&#x3E;
+        &#x3C;p&#x3E;&#x3C;/p&#x3E;
+        &#x3C;p&#x3E;&#x3C;/p&#x3E;
+    &#x3C;/body&#x3E;
+&#x3C;/html&#x3E;
+                                </code></pre>
+                            </div>
+                            <div class="spoiler-button">
+                                <button></button>
+                            </div>
+                        </div>
+                        <li>Į pirmąją pastraipą įraškite: "Šiandien yra sekmadienis"</li>
+                        <div class="spoiler">
+                            <div class="spoiler-content">
+                                <pre><code class="language-html">&#x3C;!DOCTYPE html&#x3E;
+&#x3C;html&#x3E;
+    &#x3C;head&#x3E;
+        &#x3C;title&#x3E;Pirmasis m&#x16B;s&#x173; puslapis&#x3C;/title&#x3E;
+    &#x3C;/head&#x3E;
+    &#x3C;body&#x3E;
+        &#x3C;p&#x3E;&#x160;iandien yra sekmadienis&#x3C;/p&#x3E;
+        &#x3C;p&#x3E;&#x3C;/p&#x3E;
+    &#x3C;/body&#x3E;
+&#x3C;/html&#x3E;
+                                </code></pre>
+                            </div>
+                            <div class="spoiler-button">
+                                <button></button>
+                            </div>
+                        </div>
+                        <li>Į antrąją pastraipą įrašykite: "Rytoj bus pirmadienis"</li>
+                        <div class="spoiler">
+                            <div class="spoiler-content">
+                                <pre><code class="language-html">&#x3C;!DOCTYPE html&#x3E;
+&#x3C;html&#x3E;
+    &#x3C;head&#x3E;
+        &#x3C;title&#x3E;Pirmasis m&#x16B;s&#x173; puslapis&#x3C;/title&#x3E;
+    &#x3C;/head&#x3E;
+    &#x3C;body&#x3E;
+        &#x3C;p&#x3E;&#x160;iandien yra sekmadienis&#x3C;/p&#x3E;
+        &#x3C;p&#x3E;Rytoj bus pirmadienis&#x3C;/p&#x3E;
+    &#x3C;/body&#x3E;
+&#x3C;/html&#x3E;
+                                </code></pre>
+                            </div>
+                            <div class="spoiler-button">
+                                <button></button>
+                            </div>
+                        </div>
+                    </ol>
+                    <p>Vizualiai jūsų puslapis atrodys: <a href="pirma_uzduotis.html">Puslapio nuoroda</a> (spauskite nuorodą kairėje, norint atsidaryti puslapį)</p>
+                    <p class="d-inline-b">Vizuali jūsų puslapio nurooda:</p><span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/pam1/ss8.jpg" alt=""></div></span>
+                    <p >Užduoties sprendimo kodas (spauskite "Rodyti kodą", norint pamatyti sprendimo kodą (atsakymą)):</p>
+
+                    <div class="spoiler">
+                        <div id="spoilerContent1" class="spoiler-content">
+                            <pre><code class="language-html">&#x3C;!DOCTYPE html&#x3E;
+&#x3C;html&#x3E;
+&#x3C;head&#x3E;
+    &#x3C;title&#x3E;Pirmasis m&#x16B;s&#x173; puslapis&#x3C;/title&#x3E;
+&#x3C;/head&#x3E;
+&#x3C;body&#x3E;
+    &#x3C;p&#x3E;&#x160;iandien yra sekmadienis&#x3C;/p&#x3E;
+    &#x3C;p&#x3E;Rytoj bus pirmadienis&#x3C;/p&#x3E;
+&#x3C;/body&#x3E;
+&#x3C;/html&#x3E;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button id="spoilerButton1"></button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="theory-text">
+                    <ol class="task-list">
+                        <li>Susikurkite naują projektą</li>
+                    </ol>
+
+                    <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
