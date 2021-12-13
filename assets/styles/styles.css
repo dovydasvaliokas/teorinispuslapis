@@ -2,10 +2,6 @@
     box-sizing: border-box;
 }
 
-html, body {
-    width: 100%;
-}
-
 /* ------------------Bendri stiliai---------------------- */
 div {
     border: 1px dashed grey;
