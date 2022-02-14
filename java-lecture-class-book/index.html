@@ -43,6 +43,7 @@
                         </ul>
                         <li>Pagrindinėje programoje sukurti tokias funkcijas:</li>
                             <ul>
+                                <li>Duomenų nuskaitymo - funkcija gauna String failoPavadinimas, o grąžina ArrayList&lt;Knyga&gt; - nuskaitytas knygas iš duomenų failo. Failo kurtis nereikia, jis yra įkeltas Discord’e.</li>
                                 <li>Sumos - funkcija gauna Knygų ArrayList’ą, o turėtų grąžinti double skaičių - Knygų kainos sumą.</li>
                                 <li>Vidurkio - funkcija gauna Knygų ArrayList’ą, o turėtų grąžinti double skaičių - Knygų kainos vidurkį.</li>
                                 <li>Paieška - funkcija gauna String isbn, o turėtų grąžinti Knyga objektą - vieną knygą, kurios yra toks isbn</li>
@@ -195,6 +196,33 @@ public class Knyga {
                                 <button></button>
                             </div>
                         </div>
+                    </ul>
+
+                    <ul class="example-list">
+                        <li>Susikūrėme klasę, toliau reikia kurti funkcijas PagrindinePrograma faile. Atsidarome tą failą ir main funkcijos viduje susikuriame knygų ArrayList'ą - jame saugosime visas knygas bei String failoPavadinimas - čia bus failo pavadinimas, iš kurio skaitysime knygas. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-lecture1/screenshot14.jpg" alt="Kodo foto"></div></span></li>
+                        <li>Toliau, kuriame funkciją, kuri nuskaitys knygas iš tekstinio failo. (po main uždaromojo riestinio skliausto) Funkcija gaus String failoPavadinimas. Taip darome, jog funkcija būtų universalesnė. Padarę, jog funkcija failo pavadinimą gautų, o ne visada nuskaitytų iš to pačio, mes padarome, jog funkcija veiktų su bet kokiais failais.</li>
+                        <li>Kuriame funkciją rašydami "public static", toliau rašome kokį duomenų tipą funkcija grąžins. Šiuo atveju tai yra ArrayList&lt;Knyga&gt;, kadangi funkcija grąžins visas nuskaitytas knygas (ką kiekviena funkcija grąžins yra nurodyta ir šios užduoties nurodymuose). Toliau rašome funkcijos pavadinimą. Dedame paprastus skliaustus ir skliaustų viduje yrašome kokio duomenų tipo ir kokio pavadinimo parametrus gaus (String failoPavadinimas). Atidarome riestinius skliaustus ir pradedame funkciją. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-lecture1/screenshot15.jpg" alt="Kodo foto"></div></span></li>
+                        <li>Toliau, funkcijoje reikia parašyti try ir catch blokus, kadangi vėlgi pagal Javos taisykles, norint skaityti iš failo būtina gaudyti FileNotFoundException. try bloke susikuriame File objektą (jam sukurti naudojame failoPavadinimas), toliau susikuriame Scanner objektą (jam naudojame File objektą, kurį susikūrėme prieš tai. Viskas turėtų atrodyti štai taip: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-lecture1/screenshot16.jpg" alt="Kodo foto"></div></span></li>
+                        <li>Tai yra standartinė duomenų nuskaitymo iš failo procedūra. Jos nereikia mokėti atmintinai, tiesiog žinoti iš kur pasižiūrėti (pavyzdžiai), kadangi ji visada kartojasi. </li>
+                        <li>Toliau, jau reikia skaityti duomenis ir juos išsaugoti. Ši procedūra yra dažnai panaši, tačiau nebūtinai visada tokia pati. Priklauso nuo to kaip duomenys yra išdėstyti/išsaugoti bei kokie duomenys ten yra.</li>
+                        <li>Šioje užduotyje mūsų duomenys yra .csv faile, tai reiškias, jog kiekvienas "stulpelis" yra atskirtas kableliu. Pirmame stulpelyje yra isbn, antrame pavadinimas, trečiame autorius, ketvirtame leidimo metai ir t.t.</li>
+                        <li>Norint nuskaityti visas knygas, reikia skaiyti kiekvieną eilutę iš tekstinio failo. Toliau, tą eilutę skaldyti per kablelius, kadangi kableliai skiria skirtingus stulpelius. Suskaldyta eilutė bus visada tokio pat dydžio String masyve. Taigi masyvo nulinis elementas visada bus isbn, masyvo pirmas elementas pavadinimas, masyvo antras bus autorius ir t.t. Kadangi, masyvas yra String tipo, kai kuriuos kintamuosius (int ir double) turėsime konvertuoti į jų tipus. Patogiausiai, jog nepasimesti yra susikurti papildomus "laikinus" kintamuosius kiekvienam stulpeliui ir kurį reikia konvertuoti. Toliau išsaugome tuos duomenis į Knyga objektą per konstruktorių arba setterius, o tą objektą į dedameį ArrayList'ą.</li>
+                        <li>Šie žingsniai taip pat yra standartiniai nuskaitant tam tikros klasės objektus iš .csv failo</li>
+                        <li>Toliau, pasižiūrėsime kiekvieną žingsnį detaliau</li>
+                        <li>Nuskaitome pirmą eilutę, bet jos neišsaugome, kadangi ji mums yra nereikalinga. Toliau, sukame while ciklą, kol failoSkaitytuvas turi sekančių eilučių iš failo. Kitaip sakant sukam ciklą per visas failo eilutes. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-lecture1/screenshot17.jpg" alt="Kodo foto"></div></span></li>
+                        <li>While ciklo viduje (šiuos veiksmus kartos kiekvienai eilutei) nuskaitome eilutę į String tipo kintamąjį. Eilutę išskaldome į String tipo masyvą. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-lecture1/screenshot18.jpg" alt="Kodo foto"></div></span></li>
+                        <li>isskaldytaEilute yra String[] masyvas. Masyvo kintamuosius pasiekiame per laužtinius skliaustus. Kadangi, tekste eilutės yra išdėstytos ta pačia tvarka, tai isskaldytaEilute[0] visada bus isbn, isskaldytaEilute[1] visada bus pavadinimas, isskaldytaEilute[2] visada bus autorius ir t.t.</li>
+                        <li>Žinodami tai, galime susikurti laikinus kintamuosius. Kadangi metai ir kaina nėra String tipo kintamieji - juos konvertuojame. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-lecture1/screenshot19.jpg" alt="Kodo foto"></div></span></li>
+                        <li>Susikuriame naują Knygos objektą, į kurį su konstruktoriu ir sudėsime šiuos kintamuosius. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-lecture1/screenshot20.jpg" alt="Kodo foto"></div></span></li>
+                        <li>Kadangi to nepadarėme prieš tai, tai dabar grįžtame truputį atgal ir susikuriame Knygų ArrayList'ą, kadangi neturėdame ArrayList'o, neturėsime į ką saugoti visas knygas. Kai jau susikuriame ArrayListą (prieš ciklą) tada galima ciklo viduje kiekvieną knygą vis addinti (pridėti) į arraylistą. Taip pat grąžiname tą ArrayList'ą per return po ciklo ir try bloko. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-lecture1/screenshot21.jpg" alt="Kodo foto"></div></span></li>
+                        <li>Belieka šią funkciją panaudoti main dalyje bei jas išvesti su System.out.println, jog pasitikrintume ar tikrai gerai nuskaitė. Išvedimui pavyzdyje naudoju forEach išvedimą, jog kiekvieną knygą išvestų į atskirą eilutę ir taip būtų patogiau susitikrinti. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-lecture1/screenshot22.jpg" alt="Kodo foto"></div></span></li>
+
+
+
+                    </ul>
+
+                    <ul class="example-list">
+
                     </ul>
 
                     <pre> <code class="language-html">&#x3C;p&#x3E; yra pastraipos žymė</code></pre>
