@@ -52,7 +52,7 @@
                                 <li>Filtravimo - funkcija  gauna String autorius, ArrayList&lt;Knyga&gt; knygos, o turėtų grąžinti ArrayList&lt;Knyga&gt; - arraylist’ą, kuriame yra visos gauto autoriaus knygos.</li>
                                 <li>Analogiškai padaryti filtravimą leidėjui ir šaliai.</li>
                                 <li>Padaryti metų filtravimo funkciją, kuri gauna int metai, ArrayList&lt;Knyga&gt; knygos ir grąžintų ArrayList&lt;Knyga&gt; - ArrayList’ą tų knygų, kurios yra išleistos vėliau nei gauti metai.</li>
-                                <li>Padaryti kainų nuo-iki filtravimą. Funkcija gauna double startKaina, double limitKaina, ArrayList&lt;Knyga&gt; knygos, o grąžina ArrayList&lt;Knyga&gt; - arraylist’ą knygų, kurios yra brangesnės nei startKaina, bet pigesnės nei limitKaina.</li>
+                                <li>Padaryti kainų nuo -iki filtravimą. Funkcija gauna double startKaina, double limitKaina, ArrayList&lt;Knyga&gt; knygos, o grąžina ArrayList&lt;Knyga&gt; - arraylist’ą knygų, kurios yra brangesnės nei startKaina, bet pigesnės nei limitKaina.</li>
                             </ul>
                         <li>Atlikti rikiavimą arba kuriant Comparator’ius viduje klasės arba naudojant Lambda funkcijų trumpinius.</li>
                         <ul>
@@ -242,12 +242,24 @@ public class Knyga {
 
                     </ul>
 
-
-
-                    </ul>
-
                     <ul class="example-list">
+                        <li>Kitoje užduotyje reikia surasti kiek knygų yra išspausdinta kiekvienoje valstybėje. Šią užduotį galima daryti dviem būdais. Bus aptarti bei parodyti su pavyzdžiais abu būdai.</li>
+                        <li>Pirmas būdas</li>
+                        <li>Pirmas būdas. Jog būtų lengviau, galima daryti prielaidą, jog knygos yra tik iš šių šalių: "Chile, Costa Rica, Colombia, Cuba, Bolivia".</li>
+                        <li>Tada, susikuriame int[5] masyvą, kuriame bus 5 elementai.</li>
+                        <li>Kiekviena iš masyvų vietų atitinkamai priklausys šalies knygų skaičiui. Pavyzdžiui, nulinėje masyvo vietoje skaičiuosime kiek knygų yra Chile, pirmoje masyvo vietoje skaičiuosime kiek yra knygų išleista Costa Rica šalyje, antroje vietoje skaičiuosime kiek knygų yra išleista colombia ir t.t. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-lecture1/screenshot33.jpg" alt="Kodo foto"></div></span></li>
+                        <li>Viršutiniame paveiksliuky pavaizduota kaip atrodo ką tik sukurtas dažnumo masyvas ir paaiškinimas, ką kiekvienoje vietoje saugotume.</li>
+                        <li>Toliau, eitume per visas knygas ir tikrintume kiekvieną knygą iš kokios šalies ji yra. Tikrinimą darytume su if'u ir tada su dar vienu if'u nurodytume į kurią dažnumo masyvo pridėti +1. T.y., jeigu "Chile", tai turėtume daryti daznumoMasyvas[0]++, jeigu "Costa Rica", tai daznumoMasyvas[1]++, jei "Colombia", tai daznumoMasyvas[2] ir t.t.</li>
+                        <li>Perėję per visas knygas turėtume dažnumo masyvą, kuriame būtų surašyta kiek knygų yra išleista kiekvienoje vasltybėje.</li>
+                        <li>Tada belieka susikurti didziausioIndekasas(int[] masyvas) funkciją, kuri gauna masyvą ir grąžina didžiausio skaičio indeksą masyve. Jeigu jų yra du arba daugiau - grąžinti pirmo didžiausio. Pagal šios funkcijos rezultatą, su if'u tikrindami mes galime nustatyti, kurioje šalyje daugiausia išleista knygų. Jeigu funkcija grąžins 0, knygų daugiausia išleista Chile, jei funkcija grąžins 1, tai knygų daugiausia išleista Costa Rica, jeigu 2, tai Colombia ir t.t.</li>
+                        <li>Belieka ištestuoti funkciją ją panaudojant main() programos dalyje.</li>
+                        <li>Toliau, yra detalūs nurodymai kaip reikėtų tai įgyvendinti kode:</li>
+                        <li>Kuriamės funkciją, ji per parametrus gaus knygų ArrayList'ą, o grąžins šalies pavadinimą (String), kurioje yra daugiausia knygų.<span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-lecture1/screenshot34.jpg" alt="Kodo foto"></div></span></li>
+                        <li>Funkcijos viduje susikuriame dažnumo masyvą. Javoje int[] masyvų reikšmės yra automatiškai nunulintos, tad jų keisti nereikia, užtenka sukurti. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-lecture1/screenshot35.jpg" alt="Kodo foto"></div></span></li>
 
+                        
+                        <li>Antras būdas</li>
+                        <li></li>
                     </ul>
 
                     <pre> <code class="language-html">&#x3C;p&#x3E; yra pastraipos žymė</code></pre>
