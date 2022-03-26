@@ -155,7 +155,139 @@ private Set&lt;Ingredientas&gt; receptoIngredientai;
                     <li>name - tai sujungimo lentelės pavadinimas</li>
                     <li>joinColumns - tai koks yra receptų (šios klasės) jungiamajo stulpelio pavadinimas toje sujungimų lentelėje</li>
                     <li>inverseJoinColumns - tai koks yra kito stulpelio pavadinimas (to, kuris nurodo į kitą (šiuo atveju ingredientų) lentelę)</li>
-                    <li></li>
+                    <li>Toliau, jeigu yra Many-To-One jungtis, t.y. receptas gali turėti tik vieną vartotoją, bet vienas vartotojas gali turėti kelis vartotojus, tai recepto dalyje sukurtume paprastą kintamąjį, kuris yra Vartotojas klasė, o vartotojas klasėje sukursime Set'ą, kuriame yra Receptai (vartotojo receptai).</li>
+                    <li>Tai aprašome taip: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">    @ManyToOne
+@JoinColumn(name = "vartotojas_id")
+private Vartotojas receptoKurejas;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>JoinColumn name dalyje pažymime kokss bus stulpelio pavadinimas, kuris nurodys į vartotoją, na o šiuo atveju jis bus vartotojas_id</li>
+                    <li>Toliau, generuojame tuščią ir pilną konstruktorių (jei reikės kokių kitų, galima prisidėti vėliau). Generuojame getterius ir setterius bei toString() metodą.</li>
+                    <li>P.S. Ingredientas ir Vartotojas turėtų būti raudoni, kadangi jūs dar jiems neturite sukurtų klasių.</li>
+                    <li>Galutinis variantas turėtų atrodyti panašiai į:  <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.model.entity;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Set;
+
+@Entity
+public class Receptas {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private String pavadinimas;
+    private String nurodymai;
+    private int kalorijosPer100g;
+    private double kaina;
+
+    @ManyToMany
+    @JoinTable(
+            name = "sujungimas_receptas_ingredientas",
+            joinColumns = @JoinColumn(name = "receptas_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredientas_id"))
+    private Set&lt;Ingredientas&gt; receptoIngredientai;
+
+    @ManyToOne
+    @JoinColumn(name = "vartotojas_id")
+    private Vartotojas receptoKurejas;
+
+    public Receptas() {
+    }
+
+    public Receptas(long id, String pavadinimas, String nurodymai, int kalorijosPer100g, double kaina, Set&lt;Ingredientas&gt; receptoIngredientai, Vartotojas receptoKurejas) {
+        this.id = id;
+        this.pavadinimas = pavadinimas;
+        this.nurodymai = nurodymai;
+        this.kalorijosPer100g = kalorijosPer100g;
+        this.kaina = kaina;
+        this.receptoIngredientai = receptoIngredientai;
+        this.receptoKurejas = receptoKurejas;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getPavadinimas() {
+        return pavadinimas;
+    }
+
+    public void setPavadinimas(String pavadinimas) {
+        this.pavadinimas = pavadinimas;
+    }
+
+    public String getNurodymai() {
+        return nurodymai;
+    }
+
+    public void setNurodymai(String nurodymai) {
+        this.nurodymai = nurodymai;
+    }
+
+    public int getKalorijosPer100g() {
+        return kalorijosPer100g;
+    }
+
+    public void setKalorijosPer100g(int kalorijosPer100g) {
+        this.kalorijosPer100g = kalorijosPer100g;
+    }
+
+    public double getKaina() {
+        return kaina;
+    }
+
+    public void setKaina(double kaina) {
+        this.kaina = kaina;
+    }
+
+    public Set&lt;Ingredientas&gt; getReceptoIngredientai() {
+        return receptoIngredientai;
+    }
+
+    public void setReceptoIngredientai(Set&lt;Ingredientas&gt; receptoIngredientai) {
+        this.receptoIngredientai = receptoIngredientai;
+    }
+
+    public Vartotojas getReceptoKurejas() {
+        return receptoKurejas;
+    }
+
+    public void setReceptoKurejas(Vartotojas receptoKurejas) {
+        this.receptoKurejas = receptoKurejas;
+    }
+
+    @Override
+    public String toString() {
+        return "Receptas{" +
+                "id=" + id +
+                ", pavadinimas='" + pavadinimas + '\'' +
+                ", nurodymai='" + nurodymai + '\'' +
+                ", kalorijosPer100g=" + kalorijosPer100g +
+                ", kaina=" + kaina +
+                ", receptoIngredientai=" + receptoIngredientai +
+                ", receptoKurejas=" + receptoKurejas +
+                '}';
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
                 </div>
             </div>
         </div>
