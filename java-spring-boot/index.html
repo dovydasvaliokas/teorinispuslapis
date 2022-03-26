@@ -298,6 +298,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+@Entity
 public class Ingredientas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -321,6 +322,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+@Entity
 public class Ingredientas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -503,6 +505,10 @@ public class Vartotojas {
                             <button></button>
                         </div>
                     </div></li>
+                    <li>Proekto struktūra turėtų atrodyti štai taip: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot12.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Kai paleidžiame programą, turėtume matyti (jei yra nustatyta spring.jpa.hibernate.ddl-auto=update) kaip sukuria mūsų duomenų bazių lentelių struktūrą (galima pasižiūrėti phpmyadmine) <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot13.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Jei paleidus programą neišmetė jokių klaidų <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot13.jpg" alt="Kodo foto"></div></span> ir phpmyadmine susikūrė lentelės (jei jos nebuvo sukurtos prieš tai) <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot14.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Jei viskas pasileido ir susikūrė: padarėte model.entity dalį.</li>
 
                 </div>
             </div>
