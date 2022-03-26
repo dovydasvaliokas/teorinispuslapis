@@ -389,6 +389,120 @@ public class Ingredientas {
                             <button></button>
                         </div>
                     </div></li>
+                    <li>Sekantis etapas yra sukurti Vartotojas entity klasę. Vartotojas turės tokius "paprastus" kintamuosius kaip id, username, passsword. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.model.entity;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
+public class Vartotojas {
+    @Id
+    @GeneratedValue
+    long id;
+    String username;
+    String passsword;
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Vartotojas gali turėti savo Receptas. Reiškiasi, jog Vartotojas klasė turi kažkaip būti sujungta su Receptas klase. Kadangi vartotojas tikriausiai receptų turės nedaugt (max gal iki 100 arba 1000), tai juos visuss galime saugoti Set'e kaip kintamąjį. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">    @OneToMany(mappedBy = "receptoKurejas")
+                                Set&lt;Receptas&gt; vartotojoReceptai;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Rašome OneToMany, kadangi vienas Vartotojas gali turėti daug receptų, tačiau receptas gali turėti tik vieną vartotoją. Toliau, rašome pagal kurį kintamąjį yra "sumappintas", tai šiuo atveju tiesiog įrašome iš šio sąryšio ManyToOne klasės kintamojo pavadinimą. Paprastesniais žodžiais: kadangi vartotojas connectina su receptas klase OneToMany ir receptas klasėje turime kintamąjį "Vartotojas receptoKurejas", tai reikia tiesiog nurodyti, kad tas kintamasis mappina būtent su šita klase.</li>
+                    <li>Toliau, kuriame konstruktorius, getterius ir setterius ir toString() metodą. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.model.entity;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.Set;
+
+@Entity
+public class Vartotojas {
+    @Id
+    @GeneratedValue
+    long id;
+    String username;
+    String passsword;
+
+    @OneToMany(mappedBy = "receptoKurejas")
+    Set&lt;Receptas&gt; vartotojoReceptai;
+
+    public Vartotojas() {
+    }
+
+    public Vartotojas(long id, String username, String passsword, Set&lt;Receptas&gt; vartotojoReceptai) {
+        this.id = id;
+        this.username = username;
+        this.passsword = passsword;
+        this.vartotojoReceptai = vartotojoReceptai;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPasssword() {
+        return passsword;
+    }
+
+    public void setPasssword(String passsword) {
+        this.passsword = passsword;
+    }
+
+    public Set&lt;Receptas&gt; getVartotojoReceptai() {
+        return vartotojoReceptai;
+    }
+
+    public void setVartotojoReceptai(Set&lt;Receptas&gt; vartotojoReceptai) {
+        this.vartotojoReceptai = vartotojoReceptai;
+    }
+
+    @Override
+    public String toString() {
+        return "Vartotojas{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", passsword='" + passsword + '\'' +
+                ", vartotojoReceptai=" + vartotojoReceptai +
+                '}';
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
 
                 </div>
             </div>
