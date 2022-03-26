@@ -56,21 +56,19 @@ spring.jpa.hibernate.ddl-auto=update
                     <li><b>spring.jpa.hibernate.ddl-auto=update</b> - ši eilutė nusako ar sukurti duomenų bazėje lenteles pagal entity klases, jeigu tokių lentelių dar nėra. Tai yra gerai nustatyti kaip "update", kai pradedame projektą, jog lenteles užpildytų automatiškai, tačiau jau turint veikiantį ir galutinį projektą šį nustatymą iš "update" reikėtų pakeisti į "none"</li>
                     <li>Kai surašysite projekto nustatymus, galima pabandyti paleisti projektą - įsitikinti, jog viskas iki šiol veikia. Projektą galite paleisti per šį failą: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshotexample9.jpg" alt="Kodo foto"></div></span></li>
                     <li>Paleidus programą pas mane, man parašė tokį errorą: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot10.jpg" alt="Kodo foto"></div></span> Jis reiškia, jog nepavyko prisijungi prie duomenų bazės. Tai gali būti dėl kelių priežasčių: neįjungėte wamp serverio, neturite tokios duomenų bazės phpmyadmin'e, arba bloga jūsų nuoroda į duomenų bazę application.properties faile. Mano atveju - aš neturėjau tokios duomenų bazės phpmyadmin'e, tad sukūręs ją (tuščią be lentelių) paleidžiu programą dar kartą: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot11.jpg" alt="Kodo foto"></div></span></li>
+                </div>
+            </div>
+
+
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section2">Model package dalis</h3>
+                </div>
+                <div class="theory-text">
                     <li>projekto-pavadimimas package (jūsų bus tiesiog koks projekto pavadinimas) susikuriame model package <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot5.jpg" alt="Kodo foto"></div></span></li>
                     <li>Toliau, model package susikuriame du kitus package: entity ir repository <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot6.jpg" alt="Kodo foto"></div></span> <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot7.jpg" alt="Kodo foto"></div></span> JEIGU KURIANT REPOSITORY PACKAGE Į PACKAGE PAVADINIMĄ ĮRAŠO "entity" ŽODĮ, TAI JĮ TIESIOG IŠTRINKITE IR VIETOJ JO PARAŠYKITE "repository" - TAIP SUKURS "repository" package "model" viduje šalia "entity", o ne "entity" viduje <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot8.jpg" alt="Kodo foto"></div></span></li>
                     <li>Toliau, entity package'o viduje reikia kurtis java klases, kurios nusakytų "realius loginius objektus", tai pvz. kuriant parduotuvės projektą, tai būtų prekės, klientai, užsakymai, sandėliai, t.t.; kuriant valgyklos - meniu, receptai, klientai; filmų puslapio - filmai, klientai, komentarai; ir panašiai. Šiame pavyzdyje darysime receptų puslapį, tai bus receptai ir ingredientai.</li>
                     <li>Taigi, šiam pavyzdžiui naudojant receptai ir ingredientai klases, susikuriu receptas klasę:</li>
-
-
-
-                    <ul class="example-list">
-                        <li>lore </li>
-                        <li>lore</li>
-                        <li>lore</li>
-                        <li>lore</li>
-                    </ul>
-
-                    <pre> <code class="language-html">&#x3C;p&#x3E; yra pastraipos žymė</code></pre>
                 </div>
             </div>
         </div>
