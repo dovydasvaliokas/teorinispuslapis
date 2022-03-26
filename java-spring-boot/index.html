@@ -67,8 +67,95 @@ spring.jpa.hibernate.ddl-auto=update
                 <div class="theory-text">
                     <li>projekto-pavadimimas package (jūsų bus tiesiog koks projekto pavadinimas) susikuriame model package <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot5.jpg" alt="Kodo foto"></div></span></li>
                     <li>Toliau, model package susikuriame du kitus package: entity ir repository <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot6.jpg" alt="Kodo foto"></div></span> <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot7.jpg" alt="Kodo foto"></div></span> JEIGU KURIANT REPOSITORY PACKAGE Į PACKAGE PAVADINIMĄ ĮRAŠO "entity" ŽODĮ, TAI JĮ TIESIOG IŠTRINKITE IR VIETOJ JO PARAŠYKITE "repository" - TAIP SUKURS "repository" package "model" viduje šalia "entity", o ne "entity" viduje <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot8.jpg" alt="Kodo foto"></div></span></li>
-                    <li>Toliau, entity package'o viduje reikia kurtis java klases, kurios nusakytų "realius loginius objektus", tai pvz. kuriant parduotuvės projektą, tai būtų prekės, klientai, užsakymai, sandėliai, t.t.; kuriant valgyklos - meniu, receptai, klientai; filmų puslapio - filmai, klientai, komentarai; ir panašiai. Šiame pavyzdyje darysime receptų puslapį, tai bus receptai ir ingredientai.</li>
-                    <li>Taigi, šiam pavyzdžiui naudojant receptai ir ingredientai klases, susikuriu receptas klasę:</li>
+                    <li>Toliau, entity package'o viduje reikia kurtis java klases, kurios nusakytų "realius loginius objektus", tai pvz. kuriant parduotuvės projektą, tai būtų prekės, klientai, užsakymai, sandėliai, t.t.; kuriant valgyklos - meniu, receptai, klientai; filmų puslapio - filmai, klientai, komentarai; ir panašiai. Šiame pavyzdyje darysime receptų puslapį, tai bus receptai, ingredientai ir vartotojai.</li>
+                    <li>Taigi, šiam pavyzdžiui naudojant receptai ir ingredientai klases, susikuriu receptas klasę.</li>
+                    <li>Susirašau visus "paprastus" kintamuosius - tuos, kurie ir taip yra lentelės stulpeliai. Pavyzdžiui receptas LENTELĖ turi id, pavadinimą, nurodymus, kalorijosPer100g, kaina ir vartotojo_id. Taip pat ji turi sąryšį per papildomą sujungimo lentelę su Ingredientais. vartotojo_id taip pat yra "jungiamasi" stulpelis, kuris nurodo į vartotojo lentelę (foreign key referencing user table).</li>
+                    <li>Tad Receptas klasėje iš pradžių galime susirašyti paprastus stulpelius (vartotojo_id netinka, nes jis foreign key, jį užrašysime kitaip). Tai turėtų atrodyti taip: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.model.entity;
+
+public class Receptas {
+    private long id;
+    private String pavadinimas;
+    private String nurodymai;
+    private int kalorijosPer100g;
+    private double kaina;
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Toliau, prie id pažymime su @ ženklu, jog tai yra Id ir jog tai yra GeneratedValue(generuojama reikšmė). Taip pat prie GeneratedValue skliausteliuose prirašome kokia yra strategy. Ji turėtų būti IDENTITY, tai reiškia, jog naudoja duomenų bazės auto-increment funkciją. Tai padės išvengti problemų, kai bandysite pridėti kai kuriuos duomenis phpmyadmin, o kai kuriuos per javą. Dažnai, jei yra nenaudojamas phpmyadmin, tai būtų naudojama ir SEQUENCE arba AUTO strategy. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.model.entity;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+public class Receptas {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private String pavadinimas;
+    private String nurodymai;
+    private int kalorijosPer100g;
+    private double kaina;
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Taip pat, galime pažymėti, jog ši klasė yra Entity klasė, su @Entity žymėjimu <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.model.entity;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+public class Receptas {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private String pavadinimas;
+    private String nurodymai;
+    private int kalorijosPer100g;
+    private double kaina;
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Toliau, reikia susirašyti "specialius" kintamuosius, tai yra tuos, kurie bus susiję su kitais objektais. Pavyzdžiui receptas gali turėti kelis Ingredientas objektus - recepto ingredientus. Tai būtų Set'as, kuriame yra Ingredientas klasės objektai. Taip pat, Ingredientas gali būti keliuose skirtinguose receptuose. Panašiai kaip receptas gali būti keliuose meniu ir viename meniu gali būti keli receptai. Tokios klasės yra sujungtos Many-To-Many principu ir jas reikia aprašyti tokiu žymėjimu: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">    @ManyToMany
+@JoinTable(
+        name = "sujungimas_receptas_ingredientas",
+        joinColumns = @JoinColumn(name = "receptas_id"),
+        inverseJoinColumns = @JoinColumn(name = "ingredientas_id"))
+private Set&lt;Ingredientas&gt; receptoIngredientai;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>name - tai sujungimo lentelės pavadinimas</li>
+                    <li>joinColumns - tai koks yra receptų (šios klasės) jungiamajo stulpelio pavadinimas toje sujungimų lentelėje</li>
+                    <li>inverseJoinColumns - tai koks yra kito stulpelio pavadinimas (to, kuris nurodo į kitą (šiuo atveju ingredientų) lentelę)</li>
+                    <li></li>
                 </div>
             </div>
         </div>
