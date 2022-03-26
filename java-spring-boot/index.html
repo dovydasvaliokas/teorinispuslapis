@@ -288,6 +288,108 @@ public class Receptas {
                             <button></button>
                         </div>
                     </div></li>
+                    <li>Dabar kuriame Ingredientas klasę</li>
+                    <li>Pradedame vėlgi nuo paprastų kintamųjų, t.y.: id, pavadinimas, kalorijosPer100g, kaina. Jam taip pat galima nustatyti, jog jis turi "specialų" sujungimo kintamąjį Set'ą receptų, kuris nurodytų, kuriuose receptuose yra ingredientas. Tačiau, tai gali būti gan didelis skaičius ir tai galime palikti atskirai funkcijai, kuri gal grąžintų tarkim tik po 25 arba 50 receptų, kuriuosse yra šis ingredientas (kadangi visų dažniausiai iš karto nereiki, galima grąžinti gabalais, pvz. 25 pirmų, 25 antrų, 25 trečių. Dažniausiai užtenka kelių "gabalų", jog "patenkinti" vartotojo paieškos rezultatus, o teoriškai gali būti ir šimtas tūksstančių receptų, kuriuose yra kažkoks ingredientas, tad grąžinti visus dėl pirmų kelių "gabalų" būtų neefektyvu. Kita "medalio pusė", tai jog kiekvieną kartą norint grąžinti "gabalą" reikia iš naujo kreiptis į duomenų bazę su užklausa - tai apkrauna duomenų bazę, todėl kai kuriuos kintamuosius, kaip kad pvz. receptoIngredientus norėtume gauti iš karto, nes jų gali būti ir daugiau nei 25, bet tikrai nebus daugiau nei 100, tad neapsimoka dėl kelių papildomų daryti papildomus kvietimus į duombazę - dėl to Receptas klasėje susikūrėme Set'ą receptoIngredientai, o Ingredientas klasėje nėra būtina susikurti Set'o receptų, tačiau, jei tai padarytumėte, tai nebūtų didelė klaida - o tą daryti visiškai identiškai kaip ir Recptas klasėje.</li>
+                    <li>Taigi Ingredientas klasės pradžia turėtų atrodyti taip: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.model.entity;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+public class Ingredientas {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private String pavadinimas;
+    private int kalorijosPer100g;
+    private double kaina;
+    
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Toliau, generuojame konstruktorius. Getterius ir setterius. toString() metodą ir galiausiai klasė turėtų atrodyti štai taip: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.model.entity;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+public class Ingredientas {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private String pavadinimas;
+    private int kalorijosPer100g;
+    private double kaina;
+
+    public Ingredientas() {
+    }
+
+    public Ingredientas(long id, String pavadinimas, int kalorijosPer100g, double kaina) {
+        this.id = id;
+        this.pavadinimas = pavadinimas;
+        this.kalorijosPer100g = kalorijosPer100g;
+        this.kaina = kaina;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getPavadinimas() {
+        return pavadinimas;
+    }
+
+    public void setPavadinimas(String pavadinimas) {
+        this.pavadinimas = pavadinimas;
+    }
+
+    public int getKalorijosPer100g() {
+        return kalorijosPer100g;
+    }
+
+    public void setKalorijosPer100g(int kalorijosPer100g) {
+        this.kalorijosPer100g = kalorijosPer100g;
+    }
+
+    public double getKaina() {
+        return kaina;
+    }
+
+    public void setKaina(double kaina) {
+        this.kaina = kaina;
+    }
+
+    @Override
+    public String toString() {
+        return "Ingredientas{" +
+                "id=" + id +
+                ", pavadinimas='" + pavadinimas + '\'' +
+                ", kalorijosPer100g=" + kalorijosPer100g +
+                ", kaina=" + kaina +
+                '}';
+    }
+}
+
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+
                 </div>
             </div>
         </div>
