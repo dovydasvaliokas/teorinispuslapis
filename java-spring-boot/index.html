@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/styles/styles.css">
+    <link rel="stylesheet" href="../assets/styles/prism.css">
+    <script src="../assets/scripts/prism.js"></script>
+    <script src="../assets/scripts/script.js"></script>
+    <title>1 pamoka. HTML žymės.</title>
+</head>
+<body>
+    <div class="page-container">
+        <div class="sidebar-menu" id="sidebarMenu">
+            <img id="sidebarArrow" class="arrow" src="../assets/img/menu-arrow-right.jpg" alt="Rodyklė rodanti į dešinę pusę, skirta atidaryti šoniniam meniu">
+            <div class="sidebar-menu-text bold-text">SPAUSKITE NORINT ATIDARYTI MENIU</div>
+            <ul id="sidebarMenuList">
+                <li><a href="#section1">Meniu sąrašas</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section1">Spring boot konfiguracija</h3>
+                </div>
+                <div class="theory-text">
+                    <li>Norint pradėti Java Spring Boot projektą reikia nueiti į http://start.spring.io</li>
+                    <li>Atsidarusiame puslapyje reikia surašyti pavadinimus į laukelius kaip nurodyta paveikslėlyje: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot1.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Toliau, dešinėje pusėje reikia spausti "ADD DEPENDENCIES..." ir pridėti dependencies, kurias naudosime. Šiam projektui reikės: Spring Web, Spring Data JPA. Taip pat reikėtų dar Thymeleaf ir Spring Security, bet jeigu juos įdėsime iš karto, tai projektas neveiks, kol nesukonfiguruosime Security bei neparuošime Thymeleaf template'ų. Todėl Spring Security ir Thymeleaf įdėjimą paliksime pabaigai. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot2.jpg" alt="Kodo foto"></div></span></li>
+                    <li><b>Spring Web</b> - yra skirtas bendrai visumai šio projekto: jis yra pagrindinis dalykas, kuris leidžia visoms kitoms mūsų projekto dalis "komunikuoti" tarpusavyje. <b>Spring Data JPA</b> - su juo galime patogiai kurtis duomenų bazės veiksmus ir duomenų bazės struktūras. Taip pat šis įrankis yra atsakingas ir už prisijungimą prie duomenų bazės. Jis gali ir sukurti lenteles duombazėje pagal klasių struktūrą bei sugeneruoti tam tikras bendrines gavimo užklausas, kaip kad pvz. findReceptasByPavadinimas(). Taip pat, kurių dar dabar nededame, bet naudosime vėliau projekte (bus nurodyta kada) <b>Thymeleaf</b> - jis leidžia kurti puslapio template (šablonus) naudojant html ir css bei tam tikrus parametrus leidžia įrašyti iš javos naudojant tam tikrą sintaksę (apie ją vėliau). <b>Spring Security</b> - įrankis puslapio saugumui. Su juo yra apdorojama autentifikacija, registracija, puslapių leidimas tik tam tikriem vartotojam bei ir slaptažodžių hashinimas (užkodavimas, jog įvykus duombazės duomenų nutėkejimui sltaptažodžiai vis vien būtų nežinomi, nes jie užšifruoti)</li>
+                    <li></li>
+
+
+
+
+                    <ul class="example-list">
+                        <li>lore </li>
+                        <li>lore</li>
+                        <li>lore</li>
+                        <li>lore</li>
+                    </ul>
+
+                    <pre> <code class="language-html">&#x3C;p&#x3E; yra pastraipos žymė</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
