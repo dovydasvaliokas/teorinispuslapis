@@ -517,6 +517,115 @@ public class Vartotojas {
                     <h3 id="section1">Controller package ReceptasController klasė</h3>
                 </div>
                 <div class="theory-text">
+                    <li>Controller package dalyje susikuriame ReceptasController klasę. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot16.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Pasižymime, jog ji yra @RestController klasė. Bei pasirašome patį pirmą TESTINĮ endpoint'ą ir jam metodą: tai parašysime, jog endpointas yra test/greeting ir padarysime, jog jis negauna jokių parametrų, bet tiesiog į naršyklės langą išvestų "šis puslapiss veikia". <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@RestController
+public class ReceptasController {
+
+    @GetMapping("/test/greeting")
+    String testinisEndpoint() {
+        return "šis puslapis veikia";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>su @GetMapping žymime, kad šitas metodas bus susietas su tam tikru endpoint'u. @GetMapping yra naudojamas tiem metodams, kurie gaus kažkokią info iš DB. Tą endpointą nurodome GetMapping skliaustuose, šiuo atveju /test/greeting. Toliau, sukuriame metodo pavadinimą ir padarome, jog jis grąžintų String reikšmę "šis puslapis veikia", tai teisog šitą tekstą išves į naršyklės langą. (system out println nereikia, užtenka tiesiog grąžinti reikšmę per controllerį ir ji bus apdorota su model dalim ir nusiųsta į view)</li>
+                    <li>Pabandome paleisti programą ir nueiti į <a href="http://localhost:8080/test/greeting">http://localhost:8080/test/greeting</a> nuorodą ir pažiūrėti ar išvedė mūsų tekstą. Jeigu išvedė tekstą - viskas gerai. Jeigu neišvedė teksto arba programa nepasileido - ieškokite klaidos arba rašykite man. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot17.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Kai išbandėme, jog Controlleris veikia su endpoint'ais - reikia išbandyti "sujungimą" controllerio su Model package dalimi. Tai šiuo metu jau turėsime User/Endpoint -> Controller -> Model grandinę. Kad galėtume, pavyzdžiui, grąžinti norimą receptą ar įdėti norimą receptą - mums reikia ReceptasRepository interface, nes joje yra visi Duombazės metodai/funkcijos su receptais. Norint naudoti Model package'o ReceptasRepository klasės objektą, mums reikia jį "autowirinti". Tai yra specialus Spring Boot "įrankis", kuris sukuria specialius objektus programos pradžioj ir juos galime naudoti kitose klasėse, bet jų nesukuriant. Teoriškai, tą patį galima daryti ir paprastoje Javoje, tačiau reikia žymiai labiau atsižvelgti į tam tikras smulkmenas, išimtis ir taisykles. Naudojant Spring Boot, viskas truputį paprasčiau ir mums tereikia atsiminti, jog užtenka užsirašyti @Autowired ReceptasRepository kintamojoPavadinimas, kaip kad pvz.: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import lt.imones.puslapis.projektopavadinimas.model.entity.Receptas;
+import lt.imones.puslapis.projektopavadinimas.model.repository.ReceptasRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+public class ReceptasController {
+
+    @Autowired
+    ReceptasRepository receptasRepository;
+
+    @GetMapping("/test/greeting")
+    String testinisEndpoint() {
+        return "šis puslapis veikia";
+    }
+
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Toliau, galime pasirašyti kelis metodus, kurie grąžintų tam tikrus duomenis. Tai turime ReceptasRepository klasėje vieną metodą, kuris randa receptą pagal Pavadinimą ir kitą metodą, kuris grąžina Receptus nuo iki tam tikros kainos. Mes su @GetMappingu galime susieti kad tam tikra nuoroda, atlieka tam tikrą veiksmą bei per parametrus galime nusakyti, kad per nuorodą gaus tam tikrus parametrus. Taigi Controlleris ir yra tas jungiamasis tarpininkas tarp nuorodų ir ReceptasRepository metodų. </li>
+                    <li>Pasirašome pirmą metodą, kuris grąžins Receptą pagal pavadinimą. Kadangi pagal pavadinimą metodas grąžina vieną receptą, tai ir Controllerio metodas grąžins vieną Receptas klasės objektą. Kadangi ReceptasRepository metodui, kuris grąžina receptą pagal pavadinimą reikia recepto pavadinimo - jį metodas gaus iš nuorodos (get užklausos), bet vis vien turime įrašyti ir į skliaustus, jog gaus kaip parametrą. Skliaustuose su specialiu @RequestParam žymėjimu nusakysime, kad pavadinimas yra gaunamas iš nuorodos/get užklausos <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import lt.imones.puslapis.projektopavadinimas.model.entity.Receptas;
+import lt.imones.puslapis.projektopavadinimas.model.repository.ReceptasRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+public class ReceptasController {
+
+    @Autowired
+    ReceptasRepository receptasRepository;
+
+    @GetMapping("/test/greeting")
+    String testinisEndpoint() {
+        return "šis puslapis veikia";
+    }
+
+
+    @GetMapping("/recep/gauti_pav")
+    Receptas gautiPagalPavadinima(@RequestParam String pavadinimas) {
+        return receptasRepository.findByPavadinimas(pavadinimas);
+    }
+
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div> </li>
+                    <li>Viršutiniame kode @GetMapping pažymėjome nuorodą pagal kurią reikėtų patekti į "puslapį", kuriame grąžins receptą pagal pavadinimą. @RequestParam pažymėjome String pavadinimas parodydami, kad šitą kintamąjį gausime per nuorodos parametrus. Returnina funkcija ReceptasRepository metodą findByPavadinimas(); na arba kitaip sakant kreipiasi į tą metodą. </li>
+                    <li>Taigi, pavadinimas yra nuorodos parametras, bet kaip dabar išbandyti šią nuorodą? Get nuorodos, turinčios parametrus, yra užrašomos taip: "<b>nuoroda</b>" + "<b>?</b>" + "<b>pirmoParametroPavadinimas</b>" + "<b>=</b>" + "<b>pirmoParametroReiksme</b>" + "<b>%</b>" + "<b>antroParametroPavadinimas</b>" + "<b>=</b>" + "<b>antroParametroReiksme</b>" + "<b>%</b> + ketvirto, penkto ir t.t. kiek reikia (gali jų ir nebūti, kaip kad pvz. greeting nuorodai)</li>
+                    <li>Tarpas, dažniausiai yra žymimas pliuso (+) ženklu, kadangi nuorodose tarpų būti negali.</li>
+                    <li>Todėl, norėdami surasti receptą pavadinimu Mutinys, turėtume daryti užklausą tokia nuoroda: <a href="http://localhost:8080/recep/gauti_pav?pavadinimas=Mutinys">http://localhost:8080/recep/gauti_pav?pavadinimas=Mutinys</a>, o norint surasti receptą pavadinimu Bulvių košė, reikia daryti užklausą tokia nuoroda: <a href="http://localhost:8080/recep/gauti_pav?pavadinimas=Bulvi%C5%B3+ko%C5%A1%C4%97">http://localhost:8080/recep/gauti_pav?pavadinimas=Bulvi%C5%B3+ko%C5%A1%C4%97</a> <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot18.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Kaip matote iš viršutinės Bulvių košė nuorodos, lietuviškos raidės gaunasi gan nepatogios nuorodos, TAČIAU, IŠ TIKRŲJŲ GALIMA RAŠYTI TIESIOG http://<a href="http://localhost:8080/recep/gauti_pav?pavadinimas=Bulvi%C5%B3+ko%C5%A1%C4%97">localhost:8080/recep/gauti_pav?pavadinimas=Bulvių+košė</a>, tiesiog dabartinės naršyklės jau moka automatiškai lietuviškas raides konvertuoti į užšifruotus lotyniškus simbolius. Jeigu matote viršutiniame paveiksliukyje: rezultatas yra grąžinamas labai "sausai" ir sunkiai įskaitomai. Pažymėjau abiejų rezultatų pagrindinius duomenis: matome, jog grąžina Mutinys, kitas rezultatas grąžina Bulvių košė, tai kaip ir rezultatai yra geri, tačiau matome ten toliau surašo dar ir daug kitų receptų. Taip yra todėl, nes kiekvienas receptas turi vartotoją, o pas mane duombazėje yra gal ~10-20 receptų, kurie yra pirmo vartotojo. Kadangi Mutinys ir Bulvių košė priklauso pirmam vartotojui, o jie abu turi receptoKurejas kintamąjį, kuris yra Vartotojas, o tas turi Set'ą savo receptų, tai gaunasi, jog prie recepto turime dar ir visus kitus to pačio vartotojo receptus bei jų ingredientus - tai yra gan daug nebūtinai reikalingos informacijos.</li>
+                    <li>Ją galima įvairiais būdais stengtis sumažinti - galbūt nereikia saugoti visų vartotojų receptų, o juos gauti tik su funkcija, kai jų reikės. Galbūt pasidaryti custom (savadarbes) užklausas, kurios grąžintų ne pagal sugeneruotą modelį, o pagla tiek kiek mums informacijos reikia. Tačiau, kol dar tik tai pati pradžia su Spring Boot apie tai per daug galvoti nederėtų - šiuolaikiniai kompiuteriai yra greiti ir užduotys nėra milžiniško masto, jog optimizacija sudarytų daug įtakos.</li>
+                    <li>Bet kokiu atvejo, tokius rezultatus skaityti ir matyti yra labai nepatogu. Taip pat, kuo toliau tuo tas užklausas rašyti bus nepatogu, o kai bandysime daryti POST (duomenų įdėjimo) užklausą iš vis susidursime su didelėmis problemomis rašydami užklausas paprastai per naršyklę. Kad viskas būtų paprasčiau, tam yra sukurta speciali programa: <a href="https://www.postman.com/downloads/">Postman</a></li>
+                </div>
+            </div> 
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section1">Controller metodų ir rezultatų testavimas su Postman programa. Užklausų kūrimas.</h3>
+                </div>
+                <div class="theory-text">
                     
                 </div>
             </div>
