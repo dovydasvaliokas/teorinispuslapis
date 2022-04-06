@@ -678,6 +678,7 @@ public class ReceptasController {
                     <li>Bet kokiu atvejo, tokius rezultatus skaityti ir matyti yra labai nepatogu. Taip pat, kuo toliau tuo tas užklausas rašyti bus nepatogu, o kai bandysime daryti POST (duomenų įdėjimo) užklausą iš vis susidursime su didelėmis problemomis rašydami užklausas paprastai per naršyklę. Kad viskas būtų paprasčiau, tam yra sukurta speciali programa: <a href="https://www.postman.com/downloads/">Postman</a></li>
                 </div>
             </div> 
+
             <div class="section">
                 <div class="section-header">
                     <h3 id="section1">Controller metodų ir rezultatų testavimas su Postman programa. Užklausų kūrimas.</h3>
@@ -696,7 +697,143 @@ public class ReceptasController {
                     <li>Taip pat, Javoje išmeta errorą: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot28.jpg" alt="Kodo foto"></div></span></li>
                     <li>Programa nesustoja veikti, galima daryti ir toliau užklausas, tačiau vis vien toks veikimas būtų neteisingas, kadangi bent jau mano atveju tai vis kartojasi tas pats vartotojas (receptoKurejas) ir kartojasi jo pirmas receptas, o kai pasiekia receptą vėl kartojasi tas pats receptoKurejas. Taip gaunasi begalinis ciklas, kurį galiausiai kažkada pabaigia programa erroru. Šis erroras įvyksta, kai yra @ManyToOne ir @OneToMany jungtis. @ManyToMany jungčiai su lentele, panašu kiek testavau, jog tai neįvyksta, bet jei įvyktų - kreipkitės į Discord. O norint sutaisyti @ManyToOne ir @OneToMany jungtį, tai reikia prieš tos jungties @OneToMany žymėjimą. (atsiminkite, jog @ManyToOne žymėjimas bus vienoje Entity, o @OneToMany kitoje entity) Taigi mano atveju jungtis yra tarp Recepto ir Vartotojo, kuri kartojasi. Iš Receptas pusės tai yra @ManyToMany jungtis <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot29.jpg" alt="Kodo foto"></div></span>, o iš Vartotojas pusės yra @OneToMany jungtis. Todėl prie Vartotojas @OneToMany jungtis prirašau @JsonIgnore: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot30.jpg" alt="Kodo foto"></div></span></li>
                     <li>Tada, paleidę Java iš naujo jau galime išbandyti vėl tą pačią užklausą per Postman ir turėtume matyti skirtumą (taip pat ir negauti Javoje erroro): <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot31.jpg" alt="Kodo foto"></div></span></li>
-                    
+                    <li>Papildomas dalykas, kurį dar padarysiu, tai kadangi pas jus daugumą užduotyse yra Kategorijos/Žanrai/Specializacijos, tai ir aš susikursiu savo duomenų bazei bei projektui Kategorija entity. Pasidarysiu, jog Kategorija yra OneToMany su Receptas. T.y., viena kategorija gali būti daug skirtingų receptų, bet receptas gali turėti tik vieną kategoriją. Atitinkamai jungtis įrašiau naujoje Kategorija entity klasėje bei senoje Receptas entity klasėje. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot32.jpg" alt="Kodo foto"></div></span></li>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section1">Duomenų įdėjimas. Pavyzdys su Kategorijos įdėjimu.</h3>
+                </div>
+                <div class="theory-text">
+                    <li>Jūsų užduotyse, Kategorija gali įdėti tik autentifikuotas (admin) vartotojas, tačiau apie tai nereikėtų dar galvoti. Iš pradžių reikia padaryti metodą, kuris įdėtų kategoriją ir jį ištestuoti su Postmanu.</li>
+                    <li>Visų pirma, man reikia susikurti tuščią repository, jeigu ją jau turite tai galite praleisi šį žingsnį. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.model.repository;
+
+import lt.imones.puslapis.projektopavadinimas.model.entity.Kategorija;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import javax.persistence.Entity;
+
+@Repository
+public interface KategorijaRepository extends JpaRepository&lt;Kategorija, Integer&gt; {
+    
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Kai sukuriame "tuščią" Repository, kuri extendina JpaRepository, tai jau ji automatiškai turi kai kuriuoss metodus. Vienas iš jų yra save(). Jį ne už ilgo naudosime.
+                    <li>Kai jau turime Repository, derėtų susikurti ir KategorijaController, kadangi norime įdėti Kategoriją, tad reikės Controllerio, jog galėtų susieti nuorodass su norimais veiksmais. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import lt.imones.puslapis.projektopavadinimas.model.repository.KategorijaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class KategorijaController {
+    @Autowired
+    KategorijaRepository kategorijaRepository;
+    
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Toliau, kuriame controllerio metodus / sujungimus su nuorodomis. Tačiau, kadangi tai bus įdėjimo metodas, rašome ne GetMapping, o @PostMapping. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import lt.imones.puslapis.projektopavadinimas.model.repository.KategorijaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class KategorijaController {
+    @Autowired
+    KategorijaRepository kategorijaRepository;
+
+    @PostMapping("/kategorija/ideti")
+    String idetiKategorija(@RequestParam String pavadinimas) {
+        
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Viršutiniame kode PostMapping rašome dėl to, nes tai yra įdėjimo metodas. Toliau skliaustuose nurodome nuoroda, kuria norime pasiekti šį metodą (jūsų sugalvota). Toliau, yra aprašinėjama funkcija. String, kadangi pakol kas noriu, jog tiesiog išvestų tekstą "įdėta", jeigu sėkmingai įdėjo. Pavadinimą funkcijos galite pasirinkti bet kokį, o funkcijos parametruose paduodu String pavadinimas. Jis yra pažymėtas @RequestParm, kadangi jį turėtų suvesti vartotojas, o kaip vartotojas gali atsiųsti mūsų programai ką nors? Tik per nuorodą/užklausą. Kai jau turėsime HTML/CSS puslapį, tai vartotojas įves pavadinimą į teksto laukelį (puslapyje), paspaus mygtuką; mygtukas paleidžia nuorodą/užklausą ir kartu nusiunčia mūsųs programai tą pavadinimą, kurį įrašyss admin vartotojas. Taigi mes controlleryje pavadinimą dabar "gaunam iš kažkur", o kad tą "gavimą iš kažkur" galėtume ištestuoti tai ir yra Postman.</li>
+                    <li>Toliau, galima dirbti su idetiKategorija() metodu. Joje, reikės sukurti tuščią kategoriją, į ją per setterį įdėti pavadinimą ir tada tą kategoriją su repository pagalba išsaugoti duomenų bazėje. Na, o return tai gali būti bet koks tekstsas,s kuris tiesiog parodo, jog sėkmingai įdėjo. Return galima pasidaryti iš anksto, jog metodas neraudonuotų <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@PostMapping("/kategorija/ideti")
+String idetiKategorija(String pavadinimas) {
+    return "Kategorija" + pavadinimas + " sėkmingai įdėta";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Kai pasirašėme return'ą, prieš jį galime kurti kitus metodo veiksmus. Iš pradžių susikuriame tuščią Kategorija objektą. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@PostMapping("/kategorija/ideti")
+String idetiKategorija(String pavadinimas) {
+    Kategorija naujaKategorija = new Kategorija();
+    return "Kategorija" + pavadinimas + " sėkmingai įdėta";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Toliau, į Kategorija objektą sudedame visus mums žinomus dalykus. Id mes nežinome - leisime jį sukurti duomenų bazei automatiškai. Kategorijos receptų taip pat nežinome, kadangi čia yra nauja kategorija ir Receptai prie jos turi būti atnaujinti arba naujai pridėti, tad jų irgi nežinome. Žinome tik pavadinimą, tad jį per setterį ir įdedame. Jei žinotume daugiau parametrų, tai visus sudėtume per setterius į tą tuščią objektą. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@PostMapping("/kategorija/ideti")
+String idetiKategorija(String pavadinimas) {
+    Kategorija naujaKategorija = new Kategorija();
+    naujaKategorija.setPavadinimas(pavadinimas);
+    return "Kategorija" + pavadinimas + " sėkmingai įdėta";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Galiausiai, kai jau turime paruoštą Kategorija objektą, jį išsaugojame į duomenų bazę naudodami repository save metodą <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@PostMapping("/kategorija/ideti")
+String idetiKategorija(String pavadinimas) {
+    Kategorija naujaKategorija = new Kategorija();
+    naujaKategorija.setPavadinimas(pavadinimas);
+    kategorijaRepository.save(naujaKategorija);
+    return "Kategorija" + pavadinimas + " sėkmingai įdėta";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Ar metodas veikia reikia išbandyti per Postman. Sukuriame naują nuorodą ir ją būtinai padariome POST type. Surašau užklausos informaciją ir paspaudžiu send. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot33.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Belieka patikrinti duomenų bazėje (phpmyadmin) ar kategorija prisidėjo. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot34.jpg" alt="Kodo foto"></div></span></li>
                 </div>
             </div>
         </div>
