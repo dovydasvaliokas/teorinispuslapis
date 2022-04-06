@@ -1021,7 +1021,7 @@ String idetiRecepta() {
                     </div></li>
                     <li>Beliko padaryti paskutinį ingredientą. Vėlgi taip pat, kablelis, riestiniai skliausstai ir id 6. <div class="spoiler">
                         <div class="spoiler-content">
-                            <pre><code class="language-java">{
+                            <pre><code class="language-json">{
     "pavadinimas":"Kotletai",
     "nurodymai":"Iškepti mėsą",
     "kalorijosPer100g":100,
@@ -1047,7 +1047,7 @@ String idetiRecepta() {
                     <li>Pabaigėme Ingredientų sąrašą, tad galime eiti už laužtinių skliaustų, dėti kablelį ir pasižiūrėti kaip reikėtų daryti antrą būdą, kuris tinką ManyToOne jungties daliai. Pas mane tokie Recepte yra du: Vartotojas ir Kategorija. (jeigu nežinoti kokie pas jus, visada galite pasižiūrėti savo Java Entity klasėse)</li>
                     <li>Vartotojas kintamasis pas mane Receptas klasėje yra pavadintas receptoKurejas. Taigi pirma parašome kintamojo pavadinimą kabutėss, dvitaškį. Recepto kūrėjas gali būti tik vienas, todėl laužtinių skliaustų nereikia. Kadangi jis yra objektas, tai pradedame riestiniais skliaustais ir jų viduje vėl įrašome id (šiuo atveju vartotojo id): <div class="spoiler">
                         <div class="spoiler-content">
-                            <pre><code class="language-java">{
+                            <pre><code class="language-json">{
     "pavadinimas":"Kotletai",
     "nurodymai":"Iškepti mėsą",
     "kalorijosPer100g":100,
@@ -1075,7 +1075,7 @@ String idetiRecepta() {
                     </div></li>
                     <li>Toliau, vėl dedame kablelį po riestinių skliaustų ir aprašome paskutinį objektą - receptoKategorija. <div class="spoiler">
                         <div class="spoiler-content">
-                            <pre><code class="language-java">{
+                            <pre><code class="language-json">{
     "pavadinimas":"Kotletai",
     "nurodymai":"Iškepti mėsą",
     "kalorijosPer100g":100,
@@ -1107,6 +1107,35 @@ String idetiRecepta() {
                     <li>Taip sukūriau kotletų Recepto objektą JSON formatu. Tokiu pat principu toliau reikės kurtis visus duomenis, kuriuos norėsime įdėti į Duomenų bazę bei juos ir vis gausime tokiu formatu.</li>
                     <li>Na, bet, kai jau turiu savo receptą JSON formatu, galiu grįšti prie Controller klasės ir panaudoti jį.</li>
                     <h3>Controller klasėss metodas bei jo testavimas Postmane.</h3>
+                    <li>Controller klasėje galime jau metodui sakyti, jog jis gaus visą Receptas objektą, tad jam daugiau nieko ir nereikės gauti. tik tą sakome ne per RequestParam, o per @RequestBody. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@PostMapping("/recep/ideti_recepta")
+String idetiRecepta(@RequestBody Receptas ivedamasReceptas) {
+    return "įdėjo";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Na, o kadangi gauname visą objektą, tai Controllerio metode per daug mums nieko nereikia daryti. Tereikia pasakyti repossitory, jog išsaugotų tą objektą į duomenų bazę: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@PostMapping("/recep/ideti_recepta")
+String idetiRecepta(@RequestBody Receptas ivedamasReceptas) {
+    receptasRepository.save(ivedamasReceptas);
+    return "įdėjo";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Galima perkrauti Java programą ir pabandyti paleisti per Postman. Postman'e susikurkite naują request'ą, jį pasidarykite POST tipo, įsikopijuokite nuorodą ir paspauskite ant "Body" (yra parodyta paveikslėlyje) <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot36.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Kai būsite body dalyje, tada spauskite "raw" ir tada paspauskite ant "text" ir pasirinkite "JSON" (viskas parodyta paveiksliuky) <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot37.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Kai pasirinksite visus tuos nustatymus, čia galite rašyti savo JSON formato duomenis. Kadangi aš juos jau turiu parašęs, tai tiesiog įkelsiu į ten: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot38.jpg" alt="Kodo foto"></div></span></li>
+                    <li>galima šią užklausą išsisaugoti (jog ji nedingtų) ir paleisti (send). Kai paleidžiu, man parašo, jog "įdėjo" ir tada belieka patikrinti duomenų bazę. Duomenų bazėje yra įdėtas tiek receptas, tiek jis sujungtas su vartotoju, ingredientais ir kategorija. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot39.jpg" alt="Kodo foto"></div></span></li>
                 </div>
             </div>
         </div>
