@@ -904,7 +904,18 @@ String idetiRecepta() {
                     </div></li>
                     <li>Toliau, turėtume surašyti visus parametrus, kuriuos turėtų gauti šis metodas. Šį metodą vėlgi realistiškai puslapyje paleistų kažkoks mygtuko paspaudimas, kai surašė visus reikalingus dalykus į teksto laukelį ir paspaudė "pridėti receptą". Tad Controlleryje tiesiog sakome, jog "gausime iš kažkur" su mintimi, jog, kai bus pilnas puslapis, gausime tuos parametrus iš puslapio. Taigi bent jau pas mane Receptas turi gan daug kintamųjų, nors ir teoriškai galime rašyti visus parametrus kaip @RequestParam ir tada paduoti juos tiesiog per nuorodą, tačiau būtų didelis parametrų sąrašas, reikėtų naudoti kelis kreipimusis į duomenų bazę, kadangi reikėtų kiekvieną ingredientą pasiimti atskirai, vartotoją passiimti, kategoriją, na ir tuo pačiu reikėtų rašyti daugiau Java kodo.</li>
                     <li>Tačiau, praktikoje yra įprasta duomenis siųsti JSON formatu. JSON formatas tai yra "taisyklės"/būdas kaip aprašyti duomeniss. Jūs su juo jau susipažinote, kai gavote duomenis per Postman'ą iš duomenų bazės, jis juos grąžina JSON formatu. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot35.jpg" alt="Kodo foto"></div></span></li>
-                    <li>JSON formato taisyklės yra tokios. Kai norime parodyti, jog tai yra objektas dedame riestinius skliaustus. Dažniausiai, JSON ir pradėtume riestiniais skliaustais, nes norime nusiųsti visą Receptas (Knyga/Filmas/Autoservisas) objektą. </li>
+                    <li>JSON formato taisyklės yra tokios. Kai norime parodyti, jog tai yra objektas dedame riestinius skliaustus. Dažniausiai, JSON ir pradėtume riestiniais skliaustais, nes norime nusiųsti visą Receptas (Knyga/Filmas/Autoservisas) objektą. Kai pradedame objektą, tai toliau reikia surašyti visus objekto kintamuosius ir jų reikšmes. Kintamojo pavadinimą rašome kabutėse. Po to dedame dvitaškį ir rašome to kintamojo reikšmę. Jeigu tai skaičius, tai rašome tiesiog skaičių. Jeigu tai nesveikas skaičius pavyzdžiui pusantro, tai rašome su tašku 1.5. Jeigu tai tekstas, tai tekstą rašome tarp kabučių.</li>
+                    <li>Pavyzdžiui, jei norėčiau parašyti Receptas objektą, kuris turi pavadinimą "Kotletai", tai rašyčiau: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-json">{
+    "pavadinimas":"Kotletai"
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
                 </div>
             </div>
         </div>
