@@ -836,6 +836,77 @@ String idetiKategorija(String pavadinimas) {
                     <li>Belieka patikrinti duomenų bazėje (phpmyadmin) ar kategorija prisidėjo. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot34.jpg" alt="Kodo foto"></div></span></li>
                 </div>
             </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section1">Labiau komplikuotų duomenų įdėjimas. Kaip įdėti Receptas, kartu nurodant recepto Vartotoją, Kategoriją, Ingredientus. JSON formatas</h3>
+                </div>
+                <div class="theory-text">
+                    <li>Kategorija įsideda gan lengvai, kadangi mes darėme prielaidą, jog dar nėra nei vieno šios kategorijos recepto/filmo/knygos/etc., todėl išvengėme duomenų įdėjimo su "jungtais" duomenim (man nereikėjo prie kategorijos pridėjinėt receptų). Tačiau kai dėsiu naują Receptą, norėčiau jį įdėti jau su kažkokia kategorija. Taip pat norėsiu įdėti receptoKūrėją bei recepto ingredientus. Su visais šiais dalykais yra sujungtas tam tikra jungtimi (ManyToOne, ManyToMany)</li>
+                    <li>Dabar pabandysime tą pasidaryti.</li>
+                    <li>ReceptasController (jūssų atveju Filmo/Knygos/etc) klasėje susikuriame naują metodą, kuris įdės receptą. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java"><div class="spoiler">
+                                <div class="spoiler-content">
+                                    <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import lt.imones.puslapis.projektopavadinimas.model.entity.Receptas;
+import lt.imones.puslapis.projektopavadinimas.model.repository.ReceptasRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+public class ReceptasController {
+
+    @Autowired
+    ReceptasRepository receptasRepository;
+
+    @GetMapping("/recep/gauti_pav")
+    Receptas gautiPagalPavadinima(@RequestParam String pavadinimas) {
+        return receptasRepository.findByPavadinimas(pavadinimas);
+    }
+
+    @GetMapping("/recep/gauti_kaina_intervala")
+    List<Receptas> gautiPagalKainosIntervala(Double pradineKaina, Double galutineKaina) {
+        return receptasRepository.findByKainaBetween(pradineKaina, galutineKaina);
+    }
+
+    @PostMapping("/recep/ideti_recepta")
+    String idetiRecepta() {
+        return "įdėjo";
+    }
+}
+                                    </code></pre>
+                                </div>
+                                <div class="spoiler-button">
+                                    <button></button>
+                                </div>
+                            </div>
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Aš jį pas save pasivadinau idetiRecepta() ir jau pasirašiau, kad returnintų tiesiog žodį "įdėjo". Na, ir žinoma taip pat pasirašiau kokią nuorodą (/recep/ideti_recepta) noriu šiam metodui. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@PostMapping("/recep/ideti_recepta")
+String idetiRecepta() {
+    return "įdėjo";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Toliau, turėtume surašyti visus parametrus, kuriuos turėtų gauti šis metodas. Šį metodą vėlgi realistiškai puslapyje paleistų kažkoks mygtuko paspaudimas, kai surašė visus reikalingus dalykus į teksto laukelį ir paspaudė "pridėti receptą". Tad Controlleryje tiesiog sakome, jog "gausime iš kažkur" su mintimi, jog, kai bus pilnas puslapis, gausime tuos parametrus iš puslapio. Taigi bent jau pas mane Receptas turi gan daug kintamųjų, nors ir teoriškai galime rašyti visus parametrus kaip @RequestParam ir tada paduoti juos tiesiog per nuorodą, tačiau būtų didelis parametrų sąrašas, reikėtų naudoti kelis kreipimusis į duomenų bazę, kadangi reikėtų kiekvieną ingredientą pasiimti atskirai, vartotoją passiimti, kategoriją, na ir tuo pačiu reikėtų rašyti daugiau Java kodo.</li>
+                    <li>Tačiau, praktikoje yra įprasta duomenis siųsti JSON formatu. JSON formatas tai yra "taisyklės"/būdas kaip aprašyti duomeniss. Jūs su juo jau susipažinote, kai gavote duomenis per Postman'ą iš duomenų bazės, jis juos grąžina JSON formatu. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot35.jpg" alt="Kodo foto"></div></span></li>
+                    <li>JSON formato taisyklės yra tokios. Kai norime parodyti, jog tai yra objektas dedame riestinius skliaustus. Dažniausiai, JSON ir pradėtume riestiniais skliaustais, nes norime nusiųsti visą Receptas (Knyga/Filmas/Autoservisas) objektą. </li>
+                </div>
+            </div>
         </div>
     </div>
 </body>
