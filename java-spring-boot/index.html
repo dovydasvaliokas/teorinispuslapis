@@ -904,6 +904,7 @@ String idetiRecepta() {
                     </div></li>
                     <li>Toliau, turėtume surašyti visus parametrus, kuriuos turėtų gauti šis metodas. Šį metodą vėlgi realistiškai puslapyje paleistų kažkoks mygtuko paspaudimas, kai surašė visus reikalingus dalykus į teksto laukelį ir paspaudė "pridėti receptą". Tad Controlleryje tiesiog sakome, jog "gausime iš kažkur" su mintimi, jog, kai bus pilnas puslapis, gausime tuos parametrus iš puslapio. Taigi bent jau pas mane Receptas turi gan daug kintamųjų, nors ir teoriškai galime rašyti visus parametrus kaip @RequestParam ir tada paduoti juos tiesiog per nuorodą, tačiau būtų didelis parametrų sąrašas, reikėtų naudoti kelis kreipimusis į duomenų bazę, kadangi reikėtų kiekvieną ingredientą pasiimti atskirai, vartotoją passiimti, kategoriją, na ir tuo pačiu reikėtų rašyti daugiau Java kodo.</li>
                     <li>Tačiau, praktikoje yra įprasta duomenis siųsti JSON formatu. JSON formatas tai yra "taisyklės"/būdas kaip aprašyti duomeniss. Jūs su juo jau susipažinote, kai gavote duomenis per Postman'ą iš duomenų bazės, jis juos grąžina JSON formatu. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot35.jpg" alt="Kodo foto"></div></span></li>
+                    <h3>JSON FORMATAS</h3>
                     <li>JSON formato taisyklės yra tokios. Kai norime parodyti, jog tai yra objektas dedame riestinius skliaustus. Dažniausiai, JSON ir pradėtume riestiniais skliaustais, nes norime nusiųsti visą Receptas (Knyga/Filmas/Autoservisas) objektą. Kai pradedame objektą, tai toliau reikia surašyti visus objekto kintamuosius ir jų reikšmes. Kintamojo pavadinimą rašome kabutėse. Po to dedame dvitaškį ir rašome to kintamojo reikšmę. Jeigu tai skaičius, tai rašome tiesiog skaičių. Jeigu tai nesveikas skaičius pavyzdžiui pusantro, tai rašome su tašku 1.5. Jeigu tai tekstas, tai tekstą rašome tarp kabučių.</li>
                     <li>Pavyzdžiui, jei norėčiau parašyti Receptas objektą, kuris turi pavadinimą "Kotletai", tai rašyčiau: <div class="spoiler">
                         <div class="spoiler-content">
@@ -916,6 +917,196 @@ String idetiRecepta() {
                             <button></button>
                         </div>
                     </div></li>
+                    <li>KINTAMŲJŲ PAVADINIMUS REIKIA RAŠYTI TOKIUS, KOKIE YRA JAVA ENTITY KLASĖSE</li>
+                    <li>Toliau, norėdami rašyti kitą objekto (Recepto) kintamąjį dedame kablelį ir vėl jį rašome tokia pačia tvarka.</li>
+                    <li>Tad, jeigu norėčiau, jog mano Receptas būtų su nurodymais "iškepti mėsą", tai JSON faile tai atrodytų: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-json">{
+    "pavadinimas":"Kotletai",
+    "nurodymai":"Iškepti mėsą"
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Toliau, tokiu pačiu principu pridedu kitus paprastus (nejungtinius) kintamuosius. Sekantis kintamassis būtų kalorijosPer100g <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">{
+    "pavadinimas":"Kotletai",
+    "nurodymai":"Iškepti mėsą",
+    "kalorijosPer100g":100
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Sekanti yra kaina. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-json">{
+    "pavadinimas":"Kotletai",
+    "nurodymai":"Iškepti mėsą",
+    "kalorijosPer100g":100,
+    "kaina":3.17
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Galiausiai lieka jungtiniai kintamieji kaip kad receptoIngredientai, receptoKūrėjas, receptoKategorija. Juos aprašyti yra dviem būdais. </li>
+                    <li>Pirmas būdas tiems kintamiesiems, kurie yra @ManyToMany jungties arba @OneToMany jungties kintamajui. Pas mane ingredientai su receptais yra ManyToMany, todėl juos turėčiau pradėti rašydamas kintamojo pavadinimą (receptoIngredientai), dvitaškį ir tada laužtinius skliaustus. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-json">{
+    "pavadinimas":"Kotletai",
+    "nurodymai":"Iškepti mėsą",
+    "kalorijosPer100g":100,
+    "kaina":3.17,
+    "receptoIngredientai":[
+        
+    ]
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Su laužtiniais skliaustais nurodome, kad tų daiktų gali būti daug. Na, o recepte ingredientų gali būti keli, todėl tai darau ingredientams. Laužtinių skliaustų viduje dabar reikėtų kurtis objektus (ingredientus) su riestiniais skliaustais ir kiekvieną objektą (ingredientą) atskirti kableliu.</li>
+                    <li>Tarkim, noriu pasidaryti, jog kotletuose yra ingredientas su 1 id, su 3 id ir su 6 id. Tai pradėčiau nuo ingrediento su pirmu id: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-json">{
+    "pavadinimas":"Kotletai",
+    "nurodymai":"Iškepti mėsą",
+    "kalorijosPer100g":100,
+    "kaina":3.17,
+    "receptoIngredientai":[
+        {
+            "id":1
+        }
+    ]
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Ingrediento pavadinimo ir visos kitos informacijos rašyti nereikia, kadangi jis jau yra duomenų bazėje, tad užtenka tiesiog įrašyti jo id ir programa žinos, jog turime omenyje tą ingredientą.</li>
+                    <li>Toliau, dedu kablelį po riestinio skliausto ir įrašau sekantį ingredientą, kuris turi id 3. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-json">{
+    "pavadinimas":"Kotletai",
+    "nurodymai":"Iškepti mėsą",
+    "kalorijosPer100g":100,
+    "kaina":3.17,
+    "receptoIngredientai":[
+        {
+            "id":1
+        },
+        {
+            "id":3
+        }
+    ]
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Beliko padaryti paskutinį ingredientą. Vėlgi taip pat, kablelis, riestiniai skliausstai ir id 6. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">{
+    "pavadinimas":"Kotletai",
+    "nurodymai":"Iškepti mėsą",
+    "kalorijosPer100g":100,
+    "kaina":3.17,
+    "receptoIngredientai":[
+        {
+            "id":1
+        },
+        {
+            "id":3
+        },
+        {
+            "id":6
+        }
+    ]
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Pabaigėme Ingredientų sąrašą, tad galime eiti už laužtinių skliaustų, dėti kablelį ir pasižiūrėti kaip reikėtų daryti antrą būdą, kuris tinką ManyToOne jungties daliai. Pas mane tokie Recepte yra du: Vartotojas ir Kategorija. (jeigu nežinoti kokie pas jus, visada galite pasižiūrėti savo Java Entity klasėse)</li>
+                    <li>Vartotojas kintamasis pas mane Receptas klasėje yra pavadintas receptoKurejas. Taigi pirma parašome kintamojo pavadinimą kabutėss, dvitaškį. Recepto kūrėjas gali būti tik vienas, todėl laužtinių skliaustų nereikia. Kadangi jis yra objektas, tai pradedame riestiniais skliaustais ir jų viduje vėl įrašome id (šiuo atveju vartotojo id): <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">{
+    "pavadinimas":"Kotletai",
+    "nurodymai":"Iškepti mėsą",
+    "kalorijosPer100g":100,
+    "kaina":3.17,
+    "receptoIngredientai":[
+        {
+            "id":1
+        },
+        {
+            "id":3
+        },
+        {
+            "id":6
+        }
+    ],
+    "receptoKurejas": {
+        "id":1
+    }
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Toliau, vėl dedame kablelį po riestinių skliaustų ir aprašome paskutinį objektą - receptoKategorija. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">{
+    "pavadinimas":"Kotletai",
+    "nurodymai":"Iškepti mėsą",
+    "kalorijosPer100g":100,
+    "kaina":3.17,
+    "receptoIngredientai":[
+        {
+            "id":1
+        },
+        {
+            "id":3
+        },
+        {
+            "id":6
+        }
+    ],
+    "receptoKurejas": {
+        "id":1
+    },
+    "receptoKategorija": {
+        "id":3
+    }
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Taip sukūriau kotletų Recepto objektą JSON formatu. Tokiu pat principu toliau reikės kurtis visus duomenis, kuriuos norėsime įdėti į Duomenų bazę bei juos ir vis gausime tokiu formatu.</li>
+                    <li>Na, bet, kai jau turiu savo receptą JSON formatu, galiu grįšti prie Controller klasės ir panaudoti jį.</li>
+                    <h3>Controller klasėss metodas bei jo testavimas Postmane.</h3>
                 </div>
             </div>
         </div>
