@@ -2635,6 +2635,494 @@ public class KategorijaMVController {
                         </div>
                     </div></li>
                     <li>Tada, galime paleisti programą iš naujo ir išbandyti nuorodą. Turėtų atrodyti panašiai į: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot52.jpg" alt="Kodo foto"></div></span> tik (kaip ir pas mane) dar neturėtų veikti nuorodos į tas kategorijas. Tą darysime sekandčiame žingsnyje.</li>
+                    <li>Kai jau turime visų kategorijų sąrašą, reikia padaryti, jog paspaudus ant kiekvienos kategorijos "juostos" nuvestų į puslapį, kuriame yra surašyti visi tos kategorijos receptai. Na, bet norint tai padaryti, visų pirma reikia padaryti puslapį, kuriame yra išdėstyti visi kategorijos receptai.</li>
+                    <h4>Visi kategorijos receptai puslapio darymas</h4>
+                    <li>Vėlgi, susikuriame naują HTML šabloną. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot53.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Toliau, visus kategorijos receptus išdėstysiu taip pat, kaip ir visas kategorijas: naudosiu div'ą ir nuorodas (a). <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Kategorijos receptai&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div th:each="receptas : ${kategorijosReceptai}" class="list-group"&gt;
+        &lt;a th:text="${receptas.getPavadinimas()}" href="#" class="list-group-item list-group-item-action"&gt;&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Vėl reikia susikurti funkciją Controlleryje. Kadangi čia bus kategorijos reeptai, tai funkciją kursiu Kategorijos Controlleryje. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="25-25"><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import lt.imones.puslapis.projektopavadinimas.model.entity.Kategorija;
+import lt.imones.puslapis.projektopavadinimas.model.repository.KategorijaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+
+@Controller
+public class KategorijaMVController {
+    @Autowired
+    KategorijaRepository kategorijaRepository;
+
+    @GetMapping("/test/visos_kategorijos")
+    String rodytiVisasKategorijas(Model model) {
+        List&lt;Kategorija&gt; visosKategorijos = kategorijaRepository.findAll();
+        model.addAttribute("visosKategorijos", visosKategorijos);
+        return "visos_kategorijos.html";
+    }
+
+    @GetMapping("/kategorija/rodyti_receptus")
+    String rodytiKategorijosReceptus(@RequestParam long id) {
+        
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Ši funkcija gauna id ir pagal tą id randa kategoriją. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@GetMapping("/kategorija/rodyti_receptus")
+String rodytiKategorijosReceptus(@RequestParam int id) {
+    Kategorija kategorija = kategorijaRepository.findById(id);
+    return "kategorijos_receptai.html";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Kai jau turime kategoriją, reikia paduoti jos receptus modeliui. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@GetMapping("/kategorija/rodyti_receptus")
+String rodytiKategorijosReceptus(Model model, @RequestParam int id) {
+    Kategorija kategorija = kategorijaRepository.findById(id);
+    model.addAttribute("kategorijosReceptai", kategorija.getKategorijosReceptai());
+    return "kategorijos_receptai.html";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Vėlgi, galime paleisti programą ir išsibandyti ar randa kokios nors kategorijos receptus/kitusdaiktus. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot54.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Galime truputį patobulinti HTML puslapį, jog pačioje pradžioje rašytų kategorijos pavadinimą: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Kategorijos receptai&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h2 th:text="${kategorijosPavadinimas}"&gt;&lt;/h2&gt;
+    &lt;div th:each="receptas : ${kategorijosReceptai}" class="list-group"&gt;
+        &lt;a th:text="${receptas.getPavadinimas()}" href="#" class="list-group-item list-group-item-action"&gt;&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Tada, žinoma, reikia patobulinti ir Controllerio metodą, jog jis paduotų modeliui kategorijosPavadinimą. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@GetMapping("/kategorija/rodyti_receptus")
+String rodytiKategorijosReceptus(Model model, @RequestParam int id) {
+    Kategorija kategorija = kategorijaRepository.findById(id);
+    model.addAttribute("kategorijosReceptai", kategorija.getKategorijosReceptai());
+    model.addAttribute("kategorijosPavadinimas", kategorija.getPavadinimas());
+    return "kategorijos_receptai.html";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Dabar jau turėtų atrodyti štai taip: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot55.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Dabar, reikėtų padaryti, jog kai paspaudžiame ant Recepto, nuvestų į Recepto puslapį. Kadangi Recepto puslapį jau turime - tai galime padaryti.</li>
+                    <li>HTML šablone pakeičiame, jog nuoroda nėra # (buvo prieš tai padarytų tokia, kad niekur nenukreiptų)(nuoroda nustatoma a elemento href atribute)</li>
+                    <li>Tiesa, taip pat reikės pakeisti, jog atributas nėra href, o th:href</li>
+                    <li>Vietoj # įrašysime, jog nuvestų į recepto puslapį (controllerio nuoroda) su pavadinimas parametru: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Kategorijos receptai&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h2 th:text="${kategorijosPavadinimas}"&gt;&lt;/h2&gt;
+    &lt;div th:each="receptas : ${kategorijosReceptai}" class="list-group"&gt;
+        &lt;a th:text="${receptas.getPavadinimas()}" th:href="@{/test/receptas(pavadinimas=${receptas.getPavadinimas()})}" class="list-group-item list-group-item-action"&gt;&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Dabar jau kai paspaudžiu ant receptų - perkelia į recepto puslapį. Belieka tą patį padaryti ir visų kategorijų puslapiui.</li>
+                    <h4>Grįžtame prie visų kategorijų.</h4>
+                    <li>Kaip darėme kategorijos receptų puslapiui, jog paspaudus ant recepto perkeltų į receptą, taip pat darysime ir kategorijai.</li>
+                    <li>Pakeičiame visų kategorijų HTML šabloną: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Visos kategorijos&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div th:each="kategorija : ${visosKategorijos}" class="list-group"&gt;
+        &lt;a th:text="${kategorija.getPavadinimas()}" th:href="@{/kategorija/rodyti_receptus/(id=${kategorija.getId()})}" class="list-group-item list-group-item-action"&gt;&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Ir dabar jau visų kategorijų puslapis veikia pilnai - kai paspaudžiu ant kategorijos, perkelia į kategorijos puslapį.</li>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section1">Kategorijos įdėjimas naudojant Thymeleaf HTML šabloną.</h3>
+                </div>
+                <div class="theory-text">
+                    <li>Mes jau buvome bandę įdėti Kategoriją siunčiant jos pavadinimą per postman/nuorodą. Dabar reikia padaryti, jog yra HTML puslapis, kuriame yra vienas įvedimo laukelis (kadangi kategorija turi tik pavadinimą), mygtukas ir suvedus pavadinimą ir paspaudus mygtuką įdėtų kategoriją.</li>
+                    <li>Pradedame vėl nuo HTML puslapio. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot56.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Toliau, susikuriu formą. Metodas post, kadangi dėsime duomenis į duomenų bazę, tai naudosime PostMapping ir post metodą. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Ideti kategorija&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;form method="post"&gt;
+
+    &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Formos viduje susikuriu įvedimo laukelį ir mygtuką <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Ideti kategorija&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;form method="post"&gt;
+        &lt;input type="text" name="pavadinimas"&gt;
+        &lt;input type="submit" value="Įdėkite kategoriją"&gt;
+    &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Vėlgi, iš karto galime Kategorija controlleryje susikurti metodą ir pažiūrėti kaip atrodo. Tiesa, metodą vis vien kuriame GetMapping, kadangi pats šis puslapis nėra post nuoroda. Kadangi šis puslapis tik tai parodo įvedimo laukelį ir mygtuką, tačiau tas puslapis į kurį mygtukas nuves - tas bus post. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import lt.imones.puslapis.projektopavadinimas.model.entity.Kategorija;
+import lt.imones.puslapis.projektopavadinimas.model.repository.KategorijaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+
+@Controller
+public class KategorijaMVController {
+    @Autowired
+    KategorijaRepository kategorijaRepository;
+
+    @GetMapping("/test/visos_kategorijos")
+    String rodytiVisasKategorijas(Model model) {
+        List&lt;Kategorija&gt; visosKategorijos = kategorijaRepository.findAll();
+        model.addAttribute("visosKategorijos", visosKategorijos);
+        return "visos_kategorijos.html";
+    }
+
+    @GetMapping("/kategorija/rodyti_receptus")
+    String rodytiKategorijosReceptus(Model model, @RequestParam int id) {
+        Kategorija kategorija = kategorijaRepository.findById(id);
+        model.addAttribute("kategorijosReceptai", kategorija.getKategorijosReceptai());
+        model.addAttribute("kategorijosPavadinimas", kategorija.getPavadinimas());
+        return "kategorijos_receptai.html";
+    }
+
+    @GetMapping("/kategorija/kategorijos_idejimas") 
+    String kategorijosPridejimas(Model model) {
+        return "ideti_kategorija.html";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Kai padarėme Controllerį, galime išbandyti ir turėtų atrodyti štai taip: (atrodo gan primityviai, nes šitam puslapiui nenaudojome Bootstrap klasių, darėme gan paprastai) <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot57.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Toliau, galime patobulinti HTML puslapį, jog mygtukas ką nors iš tikrųjų darytų ir nusiųstų pavadinimą ir įdėtų tokią kategoriją (kategorijos įdėjimo controllerį jau turime iš senesnių laikų, tiesa jis yra sename controlleryje, tai reikės persikopijuoti.)</li>
+                    <li>Na, gal tada iš pradžių ir persikeliame Kategorijos įdėjimo funkciją į mūsų naują Controllerį. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="39-45"><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import lt.imones.puslapis.projektopavadinimas.model.entity.Kategorija;
+import lt.imones.puslapis.projektopavadinimas.model.repository.KategorijaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+
+@Controller
+public class KategorijaMVController {
+    @Autowired
+    KategorijaRepository kategorijaRepository;
+
+    @GetMapping("/test/visos_kategorijos")
+    String rodytiVisasKategorijas(Model model) {
+        List&lt;Kategorija&gt; visosKategorijos = kategorijaRepository.findAll();
+        model.addAttribute("visosKategorijos", visosKategorijos);
+        return "visos_kategorijos.html";
+    }
+
+    @GetMapping("/kategorija/rodyti_receptus")
+    String rodytiKategorijosReceptus(Model model, @RequestParam int id) {
+        Kategorija kategorija = kategorijaRepository.findById(id);
+        model.addAttribute("kategorijosReceptai", kategorija.getKategorijosReceptai());
+        model.addAttribute("kategorijosPavadinimas", kategorija.getPavadinimas());
+        return "kategorijos_receptai.html";
+    }
+
+    @GetMapping("/kategorija/kategorijos_idejimas")
+    String kategorijosPridejimas(Model model) {
+        return "ideti_kategorija.html";
+    }
+
+    @PostMapping("/kategorija/ideta_kategorija")
+    String idetiKategorija(@RequestParam String pavadinimas) {
+        Kategorija naujaKategorija = new Kategorija();
+        naujaKategorija.setPavadinimas(pavadinimas);
+        kategorijaRepository.save(naujaKategorija);
+        return "ideta_kategorija.html";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Tiesa, reikia susikurti ir HTML šabloną. Jį padarysime labai labai paprastą: tiesiog pastraipa, kurioje išveda "Sėkmingai įdėta": <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot58.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Dabar galime grįžti į įdėjimo HTML failą ir jame formai ir įvedimo laukeliui priskirti th reikšmes: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Ideti kategorija&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;form th:action="@{/kategorija/ideta_kategorija}" method="post"&gt;
+        &lt;input th:value="${pavadinimas}" type="text" name="pavadinimas"&gt;
+        &lt;input type="submit" value="Įdėkite kategoriją"&gt;
+    &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Kai tą padarėte, paleiskite programą per naujo ir pabandykite pridėti Kategoriją per puslapį - turėtų viskas veikti.</li>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section1">Recepto įdėjimas naudojant Thymeleaf HTML šabloną (su daugiau kintamųjų nei įdedant kategoriją)</h3>
+                </div>
+                <div class="theory-text">
+                    <li>Recepto įdėjimo puslapiui panaudosiu jau sudaryto formos puslapį iš interneto, kuriame naudojamos Bootstrap klasės. ideti_recepta.html failas: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en" xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;meta charset="ISO-8859-1"&gt;
+    &lt;title&gt;Recepto įdėjimas&lt;/title&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="container"&gt;
+    &lt;h1&gt;Recepto įdėjimas&lt;/h1&gt;
+    &lt;hr&gt;
+    &lt;h2&gt;Įveskite recepto duomenis&lt;/h2&gt;
+
+    &lt;form action="#" method="POST"&gt;
+        &lt;input type="text"  placeholder="Recepto pavadinimas" class="form-control mb-4 col-4"&gt;
+        &lt;input type="text"  placeholder="Recepto nurodymai" class="form-control mb-4 col-4"&gt;
+        &lt;button type="submit" class="btn btn-info col-2"&gt;Išsaugokite receptą&lt;/button&gt;
+    &lt;/form&gt;
+
+    &lt;hr&gt;
+
+    &lt;a th:href="@{/}"&gt; Grįžti atgal&lt;/a&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Vėlgi, galima susikurti funkciją controlleryje: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="40-43"><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+import lt.imones.puslapis.projektopavadinimas.model.entity.Receptas;
+import lt.imones.puslapis.projektopavadinimas.model.repository.ReceptasRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+@Controller
+public class ReceptasMVController {
+    @Autowired
+    ReceptasRepository receptasRepository;
+
+    @GetMapping("/test/sveikinimas")
+    String testineFunkcija(Model model, @RequestParam String vardas) {
+        model.addAttribute("vardas", vardas);
+        return "testinis_puslapis.html";
+    }
+
+    @GetMapping("/test/receptas")
+    String testReceptas(Model model, @RequestParam String pavadinimas) {
+        Receptas receptas = receptasRepository.findByPavadinimas(pavadinimas);
+        model.addAttribute("pavadinimas", receptas.getPavadinimas());
+        model.addAttribute("nurodymai", receptas.getNurodymai());
+        model.addAttribute("kalorijosPer100g", receptas.getKalorijosPer100g());
+        model.addAttribute("kaina", receptas.getKaina());
+        model.addAttribute("receptoIngredientai", receptas.getReceptoIngredientai());
+        model.addAttribute("receptoKurejas", receptas.getReceptoKurejas());
+        model.addAttribute("receptoKategorija", receptas.getReceptoKategorija());
+        return "parodyti_recepta.html";
+    }
+
+    @GetMapping("/test/paieska")
+    String testPaieska(Model model) {
+        return "rasti_recepta.html";
+    }
+    
+    @GetMapping("/receptas/idejimas") 
+    String receptoIdejomas(Model model) {
+        return "ideti_recepta.html";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Ir vėlgi, galima ištestuoti puslapį: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot59.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Galime pagal šabloną sudėti kitus paprastų kintamųjų įvedimo laukelius (kainos ir kalorijų).</li>
                 </div>
             </div>
         </div>
