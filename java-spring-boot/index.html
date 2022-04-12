@@ -1154,7 +1154,7 @@ String idetiRecepta(@RequestBody Receptas ivedamasReceptas) {
                 <div class="theory-text">
                     <li>Visų pirma, reikia įsirašyti Thymeleaf dependency į mūsų projektą. Tai padaryti galite grįžę į <a href="https://start.spring.io/">Spring Boot internetinį puslapį</a>, pasirinkti add dependency, thymeleaf ir kai įsidedate spausti "explore", kad rastumėte kodą pom.xml faile. Arba, galite nusikopijuoti kodą iš manęs į pom.xml failą: <div class="spoiler">
                         <div class="spoiler-content">
-                            <pre><code class="language-XML">&lt;dependency&gt;
+                            <pre><code class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
     &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
 &lt;/dependency&gt;
@@ -1167,7 +1167,55 @@ String idetiRecepta(@RequestBody Receptas ivedamasReceptas) {
                     <li>Kai įsikelsite dependency, BŪTINAI, paspauskite mėlyną maven ikoną, kuri turėjo atsirasti viršutiniame dešiniame kampe. Kai ją paspausite, parsiųs failus/atnaujins projektą. Tada, galima jau eiti rašyti kodą.</li>
                     <li>Dirbant su Thymeleaf'u yra naudojamas kitoks Controlleris. Mes dirbome su RestControlleriais, o čia naudosime paprastą/mvc Controllerį. Rest controlleriai yra naudojami RESTful programoms, kurios yra modernių programų/puslapių principas, tačiau joms dažnai vizualus puslapis ir duomenų naudojimas yra atskiri dalykai ir pilną puslapį vienam naudojant RESTful būtų per didelis darbas, todėl jums užduotį davė su MVC.</li>
                     <li>Taip pat, kai naudosime Thymeleaf, tai jame bus naudojami HTML/CSS "šablonai", kuriuose bus atvaizduojamas puslapio šablonas ir tam tikrose vietose sudėsime "placeholderius", tai vietos į kurias "paduosime" kintamuosius. Gal dabar daug naujų žodžių, bet viską pasižiūrėsime dabar detaliau:</li>
-                    <li>Projekto failų resources -> templates dalyje susikurkite naują failą, pvz. "testinis_puslapis.html". Jame nieko daug nedarysime, tiesiog išvesime "Sveiki, TĄ_KĄ_PADAVĖT_PER_PARAMETRUS", jog išsibandytume ar Thymeleaf'as viską gerai gauna iš controllerio/nuorodų. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot40.jpg" alt="Kodo foto"></div></span></li>    
+                    <li>Projekto failų resources -> templates dalyje susikurkite naują failą, pvz. "testinis_puslapis.html". Jame nieko daug nedarysime, tiesiog išvesime "Sveiki, TĄ_KĄ_PADAVĖT_PER_PARAMETRUS", jog išsibandytume ar Thymeleaf'as viską gerai gauna iš controllerio/nuorodų. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot40.jpg" alt="Kodo foto"></div></span></li>   
+                    <li>Toliau, atsidarykite tą HTML failą ir į jį įrašykite tokį pradinį kodą (griaučius): <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Getting Started: Serving Web Content&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Šitą tuščią "šabloną" galėsit naudoti visiems kitiems kuriamiems šablonams. Jame pasakome, kad naudojame Thymeleaf ir Bootstrap bei surašome tuščią pradinį HTML failą. Toliau, tarp body žymių, rašytume html elementus/daiktus, kuriuos atvaizduoti. Tai galėtų būti pastraipos, antraštės, lentelės, įvedimo laukeliai, mygtukai ir t.t. Pradžiai, šitam testiniui pasidarysime pastraipą.</li>
+                    <li>Pastraipą rašytume &lt;p&gt; &lt;/p&gt; ir tarp žymių įrašytume tekstą. Pavyzdžiui &lt;p&gt;Pastraipos tekstas &lt;/p&gt;. TAČIAU, KADANGI ČIA NAUDOJAME NE ŽINOMAS REIKŠMES, O KINTAMUOSIUS IR THYMELEAF, tai viskas bus daroma truputį kitaip nei paprastame HTML. Norint padaryti "dinamišką" pastraipos tekstą (jog tekstas priklausytų nuo to ką gauna iš Javos parametrų) reikia į pastraipos atributus įrašyti th:text. Tai atrodytų štai taip:<div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Getting Started: Serving Web Content&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;p th:text=""&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li> Kai kuriuose internetiniuose pavyzdžiuose galite pastebėti, kad nėra uždaromosios žymės. (kaip paprastam HTML) TAČIAU, Esminis dalykas, tai jog pastraipos atribute reikia įrašyti "th:text" atributą, lygybę ir tuščias kabutėse. Tose kabutėse dėliosime tekstą iš kelių String reikšmių bei kintamųjų.</li> 
                 </div>
             </div>
         </div>
