@@ -1138,6 +1138,7 @@ String idetiRecepta(@RequestBody Receptas ivedamasReceptas) {
                     <li>galima šią užklausą išsisaugoti (jog ji nedingtų) ir paleisti (send). Kai paleidžiu, man parašo, jog "įdėjo" ir tada belieka patikrinti duomenų bazę. Duomenų bazėje yra įdėtas tiek receptas, tiek jis sujungtas su vartotoju, ingredientais ir kategorija. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot39.jpg" alt="Kodo foto"></div></span></li>
                 </div>
             </div>
+
             <div class="section">
                 <div class="section-header">
                     <h3 id="section1">Duomenų atnaujinimas.</h3>
@@ -1147,6 +1148,7 @@ String idetiRecepta(@RequestBody Receptas ivedamasReceptas) {
                     <li>Tad, realiai, realiai, papildomo nieko pasidaryti nėra būtina, kadangi atnaujinimui naudosime jau esamus radimo ir įdėjimo metodus. Tačiau, žinoma, reikės padaryti atitinkamą kodą, kuris atvaizduos visą redagavimo procesą internetiniame puslapyje su Thymeleaf. Kaip tik prie to ir einame sekančioje skiltyje.</li>
                 </div>
             </div>
+
             <div class="section">
                 <div class="section-header">
                     <h3 id="section1">Java Spring Boot Thymeleaf arba kaip atvaizduoti rezultatus vizualiame puslapyje.</h3>
@@ -1370,6 +1372,7 @@ public class ReceptasMVController {
                     <li>Jeigu viskas veikia, galima eiti prie kito etap, jeigu ne - kreipkitės.</li>
                 </div>
             </div>
+
             <div class="section">
                 <div class="section-header">
                     <h3 id="section1">Recepto/filmo/knygos atvaizdavimas puslapyje</h3>
@@ -1724,7 +1727,505 @@ public class ReceptasMVController {
                         </div>
                     </div></li>
                     <li>Na ir dabar paleidžiame programą per naujo ir vėl einame į tą pačią nuorodą: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot45.jpg" alt="Kodo foto"></div></span></li>
-                    <li>Toliau, taip pat galime dėlioti kitus paprastus kintamuosius, pvz. kainą ir kalorijas. </li>
+                    <li>Toliau, taip pat galime dėlioti kitus paprastus kintamuosius, pvz. kainą ir kalorijas. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Getting Started: Serving Web Content&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;table class="table table-striped"&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Pavadinimas:&lt;/th&gt;
+            &lt;td th:text="${pavadinimas}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Nurodymai:&lt;/th&gt;
+            &lt;td th:text="${nurodymai}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kalorijos per 100 gramų:&lt;/th&gt;
+            &lt;td th:text="${kalorijosPer100g}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kaina:&lt;/th&gt;
+            &lt;td th:text="${kaina}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Bei pridėti papildomas eilutes Controlleryje: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@GetMapping("/test/receptas")
+String testReceptas(Model model) {
+    Receptas receptas = receptasRepository.findById(1);
+    model.addAttribute("pavadinimas", receptas.getPavadinimas());
+    model.addAttribute("nurodymai", receptas.getNurodymai());
+    model.addAttribute("kalorijosPer100g", receptas.getKalorijosPer100g());
+    model.addAttribute("kaina", receptas.getKaina());
+    return "parodyti_recepta.html";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <h4>Set/List/Array įdėjimas į HTML dokumentą (kai kintamasis turi @ManyToMany arba @OneToMany jungtį)</h4>
+                    <li>Na, toliau pas mane būtų receptoIngredientai. Jie yra Set'as, o Set'as tai taip pat kaip ir list'as/masyvas reiškia, jog jų yra daug. (set'as skiriasi tik tuo, kad jame privalo būti visos unikalios reikšmės, negali būti vienodų). Juos paprastai į langelį įrašyti nepavyks. Tai patogiausia bus naudojant sąrašą. Kad nebūtų naudojamas paprastas, banalus HTML sąrašas, vėlgi naudosiu CSS Bootstrap sąrašą. Tad iš pradžių susikuriu tuščią Bootstrap sąrašą (langelio viduje): <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Getting Started: Serving Web Content&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;table class="table table-striped"&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Pavadinimas:&lt;/th&gt;
+            &lt;td th:text="${pavadinimas}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Nurodymai:&lt;/th&gt;
+            &lt;td th:text="${nurodymai}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kalorijos per 100 gramų:&lt;/th&gt;
+            &lt;td th:text="${kalorijosPer100g}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kaina:&lt;/th&gt;
+            &lt;td th:text="${kaina}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Ingredientai:&lt;/th&gt;
+            &lt;td&gt;
+                &lt;ul class="list-group"&gt;
+                    
+                &lt;/ul&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Toliau, susikuriu vieną tuščią sąrašo elementą (sąrašo elementai, tai kiekvienas sąrašo daiktas, tai pvz. šiuo metu vienas sąrašo elementas - vienas receptas): <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="34"><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Getting Started: Serving Web Content&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;table class="table table-striped"&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Pavadinimas:&lt;/th&gt;
+            &lt;td th:text="${pavadinimas}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Nurodymai:&lt;/th&gt;
+            &lt;td th:text="${nurodymai}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kalorijos per 100 gramų:&lt;/th&gt;
+            &lt;td th:text="${kalorijosPer100g}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kaina:&lt;/th&gt;
+            &lt;td th:text="${kaina}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Ingredientai:&lt;/th&gt;
+            &lt;td&gt;
+                &lt;ul class="list-group"&gt;
+                    &lt;li class="list-group-item"&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Dabar, naudojant Thymeleaf'o šablono komandas, reikia pasakyti, kad šitame sąraše bus išvedinėjamas masyvas/set'as ir jog į kiekvieną li išvesti po vieną ingredientą: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="33-34"><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Getting Started: Serving Web Content&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;table class="table table-striped"&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Pavadinimas:&lt;/th&gt;
+            &lt;td th:text="${pavadinimas}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Nurodymai:&lt;/th&gt;
+            &lt;td th:text="${nurodymai}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kalorijos per 100 gramų:&lt;/th&gt;
+            &lt;td th:text="${kalorijosPer100g}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kaina:&lt;/th&gt;
+            &lt;td th:text="${kaina}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Ingredientai:&lt;/th&gt;
+            &lt;td&gt;
+                &lt;ul th:each="ingredientas : ${receptoIngredientai}" class="list-group"&gt;
+                    &lt;li th:text="${ingredientas}" class="list-group-item"&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Na ir tada reikia tiesiog Controllerio metode paduoti tą kintamąjį modeliui: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="29"><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+import lt.imones.puslapis.projektopavadinimas.model.entity.Receptas;
+import lt.imones.puslapis.projektopavadinimas.model.repository.ReceptasRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+@Controller
+public class ReceptasMVController {
+    @Autowired
+    ReceptasRepository receptasRepository;
+
+    @GetMapping("/test/sveikinimas")
+    String testineFunkcija(Model model, @RequestParam String vardas) {
+        model.addAttribute("vardas", vardas);
+        return "testinis_puslapis.html";
+    }
+
+    @GetMapping("/test/receptas")
+    String testReceptas(Model model) {
+        Receptas receptas = receptasRepository.findById(1);
+        model.addAttribute("pavadinimas", receptas.getPavadinimas());
+        model.addAttribute("nurodymai", receptas.getNurodymai());
+        model.addAttribute("kalorijosPer100g", receptas.getKalorijosPer100g());
+        model.addAttribute("kaina", receptas.getKaina());
+        model.addAttribute("receptoIngredientai", receptas.getReceptoIngredientai());
+        return "parodyti_recepta.html";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Kai išbandau puslapį, gaunu tokį rezultatą: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot46.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Rezultatas nėra blogas, tačiau jis nėra estetiškas. Ingredientai yra surašyti tiesiog taip, kaip juos išveda toString() metodas. Būtų galima pasitvarkyti Ingredientas toString() metodą, jog jis neišvestų id, o visus kitus kintamuosius išvestų estetiškiau. Galima būtų dar patobulinti programą ir padaryti, jog Ingredientus išveda kiekvieną atskirai "dėžutėj" ir toj dėžutėj suvardinti visi jo kintamieji eilute. Tačiau, iš pradžių gal taip daug neapsikrauname, padarysiu paprastesnį sprendimą: jog išvestų tik tai recepto pavadinimą. Tą padarysiu, pakeisdamas Thymeleaf'o šabloną truputį, jog kur išvedu ingredientą, išvestų tik jo pavadinimą: <div class="spoiler">
+                        <div class="spoiler-content">
+<pre data-line="34"><code class="language-java">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Getting Started: Serving Web Content&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;table class="table table-striped"&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Pavadinimas:&lt;/th&gt;
+            &lt;td th:text="${pavadinimas}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Nurodymai:&lt;/th&gt;
+            &lt;td th:text="${nurodymai}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kalorijos per 100 gramų:&lt;/th&gt;
+            &lt;td th:text="${kalorijosPer100g}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kaina:&lt;/th&gt;
+            &lt;td th:text="${kaina}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Ingredientai:&lt;/th&gt;
+            &lt;td&gt;
+                &lt;ul th:each="ingredientas : ${receptoIngredientai}" class="list-group"&gt;
+                    &lt;li th:text="${ingredientas.getPavadinimas()}" class="list-group-item"&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Na ir dabar, jau rezultatas atrodo žymiai geriau: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot47.jpg" alt="Kodo foto"></div></span></li>
+                    <h4>Kaip išvesti kintamajį, kuris yra @ManyToOne jungties.</h4>
+                    <li>Na, kai kintamasis yra ManyToOne, tai reiškias, jog jis bus vienąskaita, t.y. tik vienas gali būti. Tai pas mane tokie kintamieji yra receptoKategorija ir receptoKurejas, kadangi jų gali būti tik po vieną. Juos išvesti yra žymiai paprasčiau nei ManyToMany ar OneToMany. Realiai, beviek taip pat kaip paprastus kintamuosius, vienintelis skirtumas, jog vėlgi galbūt nenorime to ne-estetiško išvedimo su id ir viskuo, tad turėsime nusakyti ką išvesti.</li>
+                    <li>Taigi, pasidarome lentelės eilutę ir langelius. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="38-41"><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Getting Started: Serving Web Content&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;table class="table table-striped"&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Pavadinimas:&lt;/th&gt;
+            &lt;td th:text="${pavadinimas}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Nurodymai:&lt;/th&gt;
+            &lt;td th:text="${nurodymai}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kalorijos per 100 gramų:&lt;/th&gt;
+            &lt;td th:text="${kalorijosPer100g}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kaina:&lt;/th&gt;
+            &lt;td th:text="${kaina}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Ingredientai:&lt;/th&gt;
+            &lt;td&gt;
+                &lt;ul th:each="ingredientas : ${receptoIngredientai}" class="list-group"&gt;
+                    &lt;li th:text="${ingredientas.getPavadinimas()}" class="list-group-item"&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kas sukūrė receptą:&lt;/th&gt;
+            &lt;td th:text="${receptoKurejas.getUsername()}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>O tada, tiesiog paduodame objektą modeliui controlleryje: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="30"><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+import lt.imones.puslapis.projektopavadinimas.model.entity.Receptas;
+import lt.imones.puslapis.projektopavadinimas.model.repository.ReceptasRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+@Controller
+public class ReceptasMVController {
+    @Autowired
+    ReceptasRepository receptasRepository;
+
+    @GetMapping("/test/sveikinimas")
+    String testineFunkcija(Model model, @RequestParam String vardas) {
+        model.addAttribute("vardas", vardas);
+        return "testinis_puslapis.html";
+    }
+
+    @GetMapping("/test/receptas")
+    String testReceptas(Model model) {
+        Receptas receptas = receptasRepository.findById(1);
+        model.addAttribute("pavadinimas", receptas.getPavadinimas());
+        model.addAttribute("nurodymai", receptas.getNurodymai());
+        model.addAttribute("kalorijosPer100g", receptas.getKalorijosPer100g());
+        model.addAttribute("kaina", receptas.getKaina());
+        model.addAttribute("receptoIngredientai", receptas.getReceptoIngredientai());
+        model.addAttribute("receptoKurejas", receptas.getReceptoKurejas());
+        return "parodyti_recepta.html";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Ir vėl galime paleisti programą per naujo ir išbandyti puslapį: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot48.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Tą patį galime padaryti ir su kategorija. Thymeleaf šablone: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="42-45"><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Getting Started: Serving Web Content&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;table class="table table-striped"&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Pavadinimas:&lt;/th&gt;
+            &lt;td th:text="${pavadinimas}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Nurodymai:&lt;/th&gt;
+            &lt;td th:text="${nurodymai}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kalorijos per 100 gramų:&lt;/th&gt;
+            &lt;td th:text="${kalorijosPer100g}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kaina:&lt;/th&gt;
+            &lt;td th:text="${kaina}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Ingredientai:&lt;/th&gt;
+            &lt;td&gt;
+                &lt;ul th:each="ingredientas : ${receptoIngredientai}" class="list-group"&gt;
+                    &lt;li th:text="${ingredientas.getPavadinimas()}" class="list-group-item"&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kas sukūrė receptą:&lt;/th&gt;
+            &lt;td th:text="${receptoKurejas.getUsername()}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kategorija:&lt;/th&gt;
+            &lt;td th:text="${receptoKategorija.getPavadinimas()}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Bei controlleryje: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="31"><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+import lt.imones.puslapis.projektopavadinimas.model.entity.Receptas;
+import lt.imones.puslapis.projektopavadinimas.model.repository.ReceptasRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+@Controller
+public class ReceptasMVController {
+    @Autowired
+    ReceptasRepository receptasRepository;
+
+    @GetMapping("/test/sveikinimas")
+    String testineFunkcija(Model model, @RequestParam String vardas) {
+        model.addAttribute("vardas", vardas);
+        return "testinis_puslapis.html";
+    }
+
+    @GetMapping("/test/receptas")
+    String testReceptas(Model model) {
+        Receptas receptas = receptasRepository.findById(1);
+        model.addAttribute("pavadinimas", receptas.getPavadinimas());
+        model.addAttribute("nurodymai", receptas.getNurodymai());
+        model.addAttribute("kalorijosPer100g", receptas.getKalorijosPer100g());
+        model.addAttribute("kaina", receptas.getKaina());
+        model.addAttribute("receptoIngredientai", receptas.getReceptoIngredientai());
+        model.addAttribute("receptoKurejas", receptas.getReceptoKurejas());
+        model.addAttribute("receptoKategorija", receptas.getReceptoKategorija());
+        return "parodyti_recepta.html";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Na ir viskas - atvaizdavome Receptą/Filmą/Knygą/Skelbimą puslapyje. Toliau, reikia padaryti, jog yra puslapis, kuriame galime ieškoti Recepto pagal pavadinimą ir mus paieška nuvestų į šį puslapį (kuriame atvaizduojame). </li>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section1">Recepto/Autoserviso/Filmo/Skelbimo paieška puslapyje.</h3>
+                </div>
+                <div class="theory-text">
+                    
                 </div>
             </div>
         </div>
