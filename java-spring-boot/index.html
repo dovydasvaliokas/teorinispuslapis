@@ -1194,7 +1194,7 @@ String idetiRecepta(@RequestBody Receptas ivedamasReceptas) {
                     <li>Šitą tuščią "šabloną" galėsit naudoti visiems kitiems kuriamiems šablonams. Jame pasakome, kad naudojame Thymeleaf ir Bootstrap bei surašome tuščią pradinį HTML failą. Toliau, tarp body žymių, rašytume html elementus/daiktus, kuriuos atvaizduoti. Tai galėtų būti pastraipos, antraštės, lentelės, įvedimo laukeliai, mygtukai ir t.t. Pradžiai, šitam testiniui pasidarysime pastraipą.</li>
                     <li>Pastraipą rašytume &lt;p&gt; &lt;/p&gt; ir tarp žymių įrašytume tekstą. Pavyzdžiui &lt;p&gt;Pastraipos tekstas &lt;/p&gt;. TAČIAU, KADANGI ČIA NAUDOJAME NE ŽINOMAS REIKŠMES, O KINTAMUOSIUS IR THYMELEAF, tai viskas bus daroma truputį kitaip nei paprastame HTML. Norint padaryti "dinamišką" pastraipos tekstą (jog tekstas priklausytų nuo to ką gauna iš Javos parametrų) reikia į pastraipos atributus įrašyti th:text. Tai atrodytų štai taip:<div class="spoiler">
                         <div class="spoiler-content">
-                            <pre><code class="language-java">&lt;!DOCTYPE HTML&gt;
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
 &lt;html xmlns:th="http://www.thymeleaf.org"&gt;
 &lt;head&gt;
     &lt;title&gt;Getting Started: Serving Web Content&lt;/title&gt;
@@ -1216,6 +1216,33 @@ String idetiRecepta(@RequestBody Receptas ivedamasReceptas) {
                         </div>
                     </div></li>
                     <li> Kai kuriuose internetiniuose pavyzdžiuose galite pastebėti, kad nėra uždaromosios žymės. (kaip paprastam HTML) TAČIAU, Esminis dalykas, tai jog pastraipos atribute reikia įrašyti "th:text" atributą, lygybę ir tuščias kabutėse. Tose kabutėse dėliosime tekstą iš kelių String reikšmių bei kintamųjų.</li> 
+                    <li>Taigi, jeigu norime, jog toje pastraipoje pvz., būtų tekstas: Sveiki, KAŽKOKS_ĮVESTAS_VARDAS, atvykę į mūsų puslapį.</li>
+                    <li>Tai išsiskaldytume tekstą į tokias dalis: 'Sveiki, ' + kintamasis + ', atvykę į mūsų puslapį.'</li>
+                    <li>Tad, tekstui yra naudojamos viengubos kabutės (kadangi atsiminkite viskas vyksta dvigubų kabučių viduje), o kintamajam bus naudojamas spečialus žymėjimas: dolerio ženklas, riestiniai skliaustai ir tarp riestinių skliaustų įrašytas kintamojo pavadinimas.</li>
+                    <li>Todėl, į th:text atributą reikėtų įrašyti: " 'Sveiki, ' + ${vardas} + ', atvykę į mūsų puslapį.'</li>
+                    <li>O visumoj kode, tai atrodytų štai taip: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Getting Started: Serving Web Content&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;p th:text="'Sveiki, ' + ${vardas} + ', atvykę į mūsų puslapį.'"&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
                 </div>
             </div>
         </div>
