@@ -1243,6 +1243,130 @@ String idetiRecepta(@RequestBody Receptas ivedamasReceptas) {
                             <button></button>
                         </div>
                     </div></li>
+                    <li>Kai turime Thymeleaf šabloną, reikia jam Controlleryje susikurti metodą, kuris nurodyutų į šį šabloną. Tačiau, senų Controllerių naudoti negalime, nes jie yra RestControlleriai. Jų žymėjimą galima pakeisti į paprastsus Controller, bet tada mes klaidą prieš tai esantys metodai. O kad jų nereikėtų ištrinti (gal kad turėtume po ranka pasižiūrėti į pavyzdį), tai galime susikurti tiesiog naują Controllerį, o kai tų RestControllerių nebereikės (pavyzdžiui) tai tiesiog ištrinti. Taigi susikuriu naują ReceptasMVController: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot41.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Kaip matote, jam parašiau @Controller, o ne @RestController kaip prieš tai.</li>
+                    <li>Toliau, susikurkime @GetMapping metodą, kuris nurodys į tą testinį šabloną.</li>
+                    <li>Pradžią rašome taip pat kaip ir anksčiau, tiesiog @GetMapping ir skliaustuose nuorodą: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+
+@Controller
+public class ReceptasMVController {
+    
+    @GetMapping("/test/sveikinimas")
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Toliau, rašome String, nes beveik visos Thymeleaf controllerio funkcijos grąžin String, kadangi funkcija turės returnint Thymeleaf šablono failo pavadinimą (testinis_puslapis.html), o failo pavadinimai visada yra String. Toliau, rašom funkcijos pavadinimą ir parametrus. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+
+@Controller
+public class ReceptasMVController {
+
+    @GetMapping("/test/sveikinimas")
+    String testineFunkcija() {
+        return "testinis_puslapis.html";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Kadangi, tame šablone yra bent vienas "placeholderis" pavadinimu "vardas", tai tam šablonui turime paduoti kažkokią reikšmę/kintamąjį vietoj to placeholderio. Na, tai kadangi čia yra tik testinis variantas, tai ši funkcija turėtų gauti vardą per parametrus (per nuorodą) ir išvesti tą vardą tiesiog į pastraipą. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+@Controller
+public class ReceptasMVController {
+
+    @GetMapping("/test/sveikinimas")
+    String testineFunkcija(@RequestParam String vardas) {
+        return "testinis_puslapis.html";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Taip pat, kiekvieną kartą kai darome Thymeleaf funkciją controlleryje, ta funkcija turėtų gauti Model model parametrą: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+@Controller
+public class ReceptasMVController {
+
+    @GetMapping("/test/sveikinimas")
+    String testineFunkcija(Model model, @RequestParam String vardas) {
+        return "testinis_puslapis.html";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Toliau, vien tik pasakyti kad naudosime Model model bei gausime vardą per parametrus neužtenka, kadangi vardą turės tik šita controllerio funkcija. Reikia dar pasakyti, jog kintamąjį siunčiame tam šablonui vietoj kažkurio "placeholderio". Tą nusakome su model.addAttribute("placeholderio_pavadinimas", kintamasis/reikšmė_kurią_įstatyti_vietoj_jo)</li>
+                    <li>Kitaip sakant rašome model.AddAttribute() ir pirmoje skliaustų dalyje įrašome placeholderio pavadinimą iš HTML failo, antroje dalyje įrašome kintamąjį iš Javos controllerio funkcijos.</li>
+                    <li>Tai viskas turėtų atrodyti taip: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+@Controller
+public class ReceptasMVController {
+
+    @GetMapping("/test/sveikinimas")
+    String testineFunkcija(Model model, @RequestParam String vardas) {
+        model.addAttribute("vardas", vardas);
+        return "testinis_puslapis.html";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Kai jau turime paruoštą(sudėjome į model visus placeholderius kažką) Controller funkciją, tai galima ją ištestuoti. Kadangi čia jau puslapis, tai per Postman testuoti nebūtina, bet galima per jį susikurti nuorodą, jei tai patogiau. Kadangi nuorodoj turi būti dar parametras "vardas". Tai, tarkim pavyzdinė nuoroda gali būti: <a href="http://localhost:8080/th/test/greeting?vardas=Dovydas">http://localhost:8080/th/test/greeting?vardas=Dovydas</a>. Galite ją ištestuoti ir turėtų puslapis atrodyti štai taip: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot42.jpg" alt="Kodo foto"></div></span></li>
                 </div>
             </div>
         </div>
