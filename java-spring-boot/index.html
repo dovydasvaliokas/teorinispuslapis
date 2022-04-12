@@ -1138,6 +1138,34 @@ String idetiRecepta(@RequestBody Receptas ivedamasReceptas) {
                     <li>galima šią užklausą išsisaugoti (jog ji nedingtų) ir paleisti (send). Kai paleidžiu, man parašo, jog "įdėjo" ir tada belieka patikrinti duomenų bazę. Duomenų bazėje yra įdėtas tiek receptas, tiek jis sujungtas su vartotoju, ingredientais ir kategorija. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot39.jpg" alt="Kodo foto"></div></span></li>
                 </div>
             </div>
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section1">Duomenų atnaujinimas.</h3>
+                </div>
+                <div class="theory-text">
+                    <li>Duomenis atnaujintume panašiai kaip ir įdėtume. Redagavimas susidarys visų pirma iš paieškos - reikės rasti receptą/filmą/knygą. Tada, puslapyje bus atvaizduoti įvedimo laukeliai, kuriuose bus surašyta filmo/knygos informacija, ją pakeisite, paspausite mygtuką ir pakeis objektą. Pakeistą objektą išsaugosime su repository į duomenų bazę.</li>
+                    <li>Tad, realiai, realiai, papildomo nieko pasidaryti nėra būtina, kadangi atnaujinimui naudosime jau esamus radimo ir įdėjimo metodus. Tačiau, žinoma, reikės padaryti atitinkamą kodą, kuris atvaizduos visą redagavimo procesą internetiniame puslapyje su Thymeleaf. Kaip tik prie to ir einame sekančioje skiltyje.</li>
+                </div>
+            </div>
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section1">Java Spring Boot Thymeleaf arba kaip atvaizduoti rezultatus vizualiame puslapyje.</h3>
+                </div>
+                <div class="theory-text">
+                    <li>Visų pirma, reikia įsirašyti Thymeleaf dependency į mūsų projektą. Tai padaryti galite grįžę į <a href="https://start.spring.io/">Spring Boot internetinį puslapį</a>, pasirinkti add dependency, thymeleaf ir kai įsidedate spausti "explore", kad rastumėte kodą pom.xml faile. Arba, galite nusikopijuoti kodą iš manęs į pom.xml failą: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-XML">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+&lt;/dependency&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>    
+                </div>
+            </div>
         </div>
     </div>
 </body>
