@@ -2460,6 +2460,183 @@ String testReceptas(Model model, @RequestParam String pavadinimas) {
                     <li>Galima išbandyti jau visą programą. Paleiskite per naujo, nueikite į paieškos puslapį, suveskite pavadinimą ir paspauskite mygtuką. Turėtų viskas veikti. Jei ne - kreipkitės.</li>
                 </div>
             </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section1">Visų kategorijų išdėstymas bei galimybė pasirinkti bet kurią iš išdėstytų kategorijų (nedarant paieškos)</h3>
+                </div>
+                <div class="theory-text">
+                    <li>Toliau, pasižiūrėsime kaip galima išdėstyti visas Receptų kategorijas, tada bus galima spausti ant bet kurios iš tų kategorijų ir parodys visus tos kategorijos filmus. Panašiai būtų daroma ir filmų kategorijai ir jų filmams, knygoms, meistrams ir jų įvertinimams, skelbimams ir jų kategorijoms, filmams ir jų komentarams ir daugeliui kitų panašių dalykų.</li>
+                    <li>Pradedu, kaip ir visada, susikurdamas Thymeleaf HTML šabloną <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot51.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Toliau, susikursiu sąrašą ir į kiekvieną eilutę/sąrašo elementą išvardinsiu po kategoriją. Tai vėlgi naudosiu naudojant thymeleaf'o komandas/žymėjimus. Tačiau, šį kartą, kadangi bus ir nuorodos į kategorijas (jų filmus), tai naudosiu truputį kitą Bootstrap įrankį: div'ą kaip list-group ir jo viduje nuorodos (a) elementus kaip list-group-item <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Visos kategorijos&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="list-group"&gt;
+        &lt;a href="#" class="list-group-item list-group-item-action"&gt;&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Galima iš karto susikurti ir Controllerio metodą. Tačiau, kadangi čia kaip ir ReceptoKategorija veiksmai, tai susikursiu naują controllerį, kuris bus skirtas ReceptoKategorija. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import lt.imones.puslapis.projektopavadinimas.model.repository.KategorijaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class KategorijaMVController {
+    @Autowired
+    KategorijaRepository kategorijaRepository;
+
+    @GetMapping("/test/visos_kategorijos")
+    String rodytiVisasKategorijas(Model model) {
+        return "visos_kategorijos.html";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Kadangi, realistiškai, jeigu vis kuriame po truputį, tai norime ir išsibandyti kaip atrodo puslapis net jei ir neturime viso. Jeigu pasileistume puslapį dabar - matytume, jog turime tuščią juostą, kuri yra taip pat kaip nuorodą, bet na nuoroda į niekur (bent jau dabar). Na, galime dabar jau pradėti Thymeleaf komandas.</li>
+                    <li>Div'ui pridėsime th:each (panašiai kaip praeitam pavyzdyje ul'ui pridėjom): <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Visos kategorijos&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div th:each="kategorija : ${visosKategorijos}" class="list-group"&gt;
+        &lt;a href="#" class="list-group-item list-group-item-action"&gt;&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Nuorodai (a) pridėsime ką kiekvieno turėtų išvesti. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Visos kategorijos&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div th:each="kategorija : ${visosKategorijos}" class="list-group"&gt;
+        &lt;a th:text="${kategorija.getPavadinimas()}" href="#" class="list-group-item list-group-item-action"&gt;&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Galima dabar pabaigti pildyti Controllerį. Kiekviena repository automatiškai turi findAll() metodą, kuris grąžina visų tų dalykų List'ą, tai pvz. KategorjaRepository grąžintų list'ą visų kategorijų: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import lt.imones.puslapis.projektopavadinimas.model.entity.Kategorija;
+import lt.imones.puslapis.projektopavadinimas.model.repository.KategorijaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
+
+@Controller
+public class KategorijaMVController {
+    @Autowired
+    KategorijaRepository kategorijaRepository;
+
+    @GetMapping("/test/visos_kategorijos")
+    String rodytiVisasKategorijas(Model model) {
+        List&lt;Kategorija&gt; visosKategorijos = kategorijaRepository.findAll();
+        return "visos_kategorijos.html";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Toliau, galime tą listą paduoti modeliui (kadangi div'ui reikia viso listo). <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import lt.imones.puslapis.projektopavadinimas.model.entity.Kategorija;
+import lt.imones.puslapis.projektopavadinimas.model.repository.KategorijaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
+
+@Controller
+public class KategorijaMVController {
+    @Autowired
+    KategorijaRepository kategorijaRepository;
+
+    @GetMapping("/test/visos_kategorijos")
+    String rodytiVisasKategorijas(Model model) {
+        List&lt;Kategorija&gt; visosKategorijos = kategorijaRepository.findAll();
+        model.addAttribute("visosKategorijos", visosKategorijos);
+        return "visos_kategorijos.html";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Tada, galime paleisti programą iš naujo ir išbandyti nuorodą. Turėtų atrodyti panašiai į: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot52.jpg" alt="Kodo foto"></div></span> tik (kaip ir pas mane) dar neturėtų veikti nuorodos į tas kategorijas. Tą darysime sekandčiame žingsnyje.</li>
+                </div>
+            </div>
         </div>
     </div>
 </body>
