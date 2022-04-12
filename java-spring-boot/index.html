@@ -1653,6 +1653,78 @@ public class ReceptasMVController {
                     </div></li>
                     <li>Galime pabandyti paleisti programą ir nueiti į puslapį. Kadangi, visada rodys pirmą receptą, tai jam net nereikia jokių parametrų per nuorodą, užtenka nueiti į: <a href="http://localhost:8080/test/receptas">http://localhost:8080/test/receptas</a> ir turėtų būti toks vaizdas: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot44.jpg" alt="Kodo foto"></div></span></li>
                     <li>Jeigu viskas gerai - galime bandyti toliau užpildyti visą lentelę, jei ne - kreipkitės.</li>
+                    <li>Taigi, į antrą lentelės eilutę bus surašyti Recepto nurodymai: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Getting Started: Serving Web Content&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;table class="table table-striped"&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Pavadinimas:&lt;/th&gt;
+            &lt;td th:text="${pavadinimas}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Nurodymai:&lt;/th&gt;
+            &lt;td th:text="${nurodymai}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Na, ir iš tikrųjų, galime išsibandyti ar veikia ir su nurodymais. Tai tereikia pridėti papildomą eilutę tame Controllerio metode, kurį jau buvom sukūrę. Jog į modelį nusiunčiame nurodymus: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="26"><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+import lt.imones.puslapis.projektopavadinimas.model.entity.Receptas;
+import lt.imones.puslapis.projektopavadinimas.model.repository.ReceptasRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+@Controller
+public class ReceptasMVController {
+    @Autowired
+    ReceptasRepository receptasRepository;
+
+    @GetMapping("/test/sveikinimas")
+    String testineFunkcija(Model model, @RequestParam String vardas) {
+        model.addAttribute("vardas", vardas);
+        return "testinis_puslapis.html";
+    }
+
+    @GetMapping("/test/receptas")
+    String testReceptas(Model model) {
+        Receptas receptas = receptasRepository.findById(1);
+        model.addAttribute("pavadinimas", receptas.getPavadinimas());
+        model.addAttribute("nurodymai", receptas.getNurodymai());
+        return "parodyti_recepta.html";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Na ir dabar paleidžiame programą per naujo ir vėl einame į tą pačią nuorodą: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot45.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Toliau, taip pat galime dėlioti kitus paprastus kintamuosius, pvz. kainą ir kalorijas. </li>
                 </div>
             </div>
         </div>
