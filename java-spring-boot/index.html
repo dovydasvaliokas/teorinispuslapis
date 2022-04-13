@@ -3411,7 +3411,7 @@ String receptoIdejomas(Model model) {
                     <li>Galite paleisti programą ir išbandyti puslapį. Dabar jau galite suvesti duomenis bei pasirinkti kategoriją. Tiesa, dar nors ir pasirinksite kategoriją ir pridėsite receptą/filmą/knygą, ta kategorija neprisidės. Tą dar padarysime. Tačiau, bet kokiu atveju siūlyčiau išsitestuoti dabar, jog pažiūrėti ar veikia pats kategorijų atvaizdavimas ir pasirnkimas. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot61.jpg" alt="Kodo foto"></div></span></li>
                     <li>Jeigu viskas veikia kaip viršutiniame paveiksliukyje, tai galima prirašyti, jog šis pasirinkimo laukelis yra receptoKategorija kintamasis: <div class="spoiler">
                         <div class="spoiler-content">
-                            <pre><code class="language-html">&lt;select th:field="*receptoKategorija" class="form-control" id="dropDownList"&gt;
+                            <pre><code class="language-html">&lt;select th:field="*{receptoKategorija}" class="form-control" id="dropDownList"&gt;
     &lt;option value="0"&gt;Pasirinkite kategoriją&lt;/option&gt;
     &lt;option th:each="kategorija : ${kategorijos}" th:value="${kategorija.getId()}" th:text="${kategorija.getPavadinimas()}"&gt;&lt;/option&gt;
 &lt;/select&gt;
@@ -3476,8 +3476,243 @@ String receptoIdejomas(Model model) {
                             <button></button>
                         </div>
                     </div></li>
+                    <li>Dabar, surašome kiekvienam įvedimo laukeliui koks jis yra kintamasis bei pačiai formai pasakome, jog čia bus Recepto objektas. Realiai, vėlgi PAKOL KAS viskas taip pat kaip ir recepto įdėjime. Net ir į controllerio endpoint'ą (/recep/idejo_recepta) kviečiasi. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en" xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;meta charset="ISO-8859-1"&gt;
+    &lt;title&gt;Recepto redagavimas&lt;/title&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="container"&gt;
+    &lt;h1&gt;Recepto įdėjimas&lt;/h1&gt;
+    &lt;hr&gt;
+    &lt;h2&gt;Įveskite recepto duomenis&lt;/h2&gt;
+
+    &lt;form th:action="@{/recep/idejo_recepta}" th:object="${receptas}" method="POST"&gt;
+        &lt;input th:field="*{pavadinimas}" type="text"  class="form-control mb-4 col-4"&gt;
+        &lt;input th:field="*{nurodymai}" type="text"  class="form-control mb-4 col-4"&gt;
+        &lt;input th:field="*{kalorijosPer100g}" type="number"  class="form-control mb-4 col-4"&gt;
+        &lt;input th:field="*{kaina}" type="number"  class="form-control mb-4 col-4"&gt;
+        &lt;select th:field="*{receptoKategorija}" class="form-control" id="dropDownList"&gt;
+            &lt;option value="0"&gt;Pasirinkite kategoriją&lt;/option&gt;
+            &lt;option th:each="kategorija : ${kategorijos}" th:value="${kategorija.getId()}" th:text="${kategorija.getPavadinimas()}"&gt;&lt;/option&gt;
+        &lt;/select&gt;
+        &lt;button type="submit" class="btn btn-info col-2"&gt;Išsaugokite receptą&lt;/button&gt;
+    &lt;/form&gt;
+
+    &lt;hr&gt;
+
+    &lt;a th:href="@{/}"&gt; Grįžti atgal&lt;/a&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Galime sukurti ir Controlleryje metodą/funkciją, kuris grąžintų į šitą puslapį. Vėlgi, pačiai pradžiai pasidarysiu, kad tai darytų visada tik tai pirmam receptui, o po to pakeisiu, jog bus metodas gaus id kurį receptą keisti. Taigi pradžiai visad su pirmu receptu funkcija: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@GetMapping("/recep/redaguoti_recepta")
+String redaguotiRecepta(Model model) {
+    Receptas receptas = receptasRepository.findById(1);
+    model.addAttribute("receptas", receptas);
+    model.addAttribute("kategorijos", kategorijaRepository.findAll());
+    return "recepto_redagavimas.html";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Taip pat, dar select elemento th:field'e sakome, jog yra kintamasis receptoKategorija. Tačiau, kadangi jau čia yra ne tuščias pasirinkimas, o gauna ir esamą receptoKategorija, tai pasakykime, kad ten pasirinkinėjam tik receptoKategorija.id <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;select th:field="*{receptoKategorija.id}" class="form-control" id="dropDownList"&gt;
+    &lt;option th:each="kategorija : ${kategorijos}" th:value="${kategorija.getId()}" th:text="${kategorija.getPavadinimas()}"&gt;&lt;/option&gt;
+&lt;/select&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Taip pat, nutryniau ir pirmą option elementą, kadangi čia jau redaguojame receptą, tai norėčiau, jog ne rašytų užrašą "pasirinkite kategoriją", o jog būtų pasirinkta jo esama kategorija. Taip pasakysiu su th:selected žymėjimu. Jo viduje įrašau, jog būtų pasirinkta šito receptoKategorijos id - taip atvaizduos esamą kategoriją. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;select th:field="*{receptoKategorija.id}" class="form-control" id="dropDownList"&gt;
+    &lt;option th:each="kategorija : ${kategorijos}" th:value="${kategorija.getId()}" th:text="${kategorija.getPavadinimas()}" th:selected="receptoKategorija.id"&gt;&lt;/option&gt;
+&lt;/select&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Dabar, kadangi redaguojame, tai HTML reikia sukurti nematomą įvedimo laukelį, kuriame saugosime id. Kadangi, jei to nepadarysime - mūsų redagavimo metodas tiesiog įdės naują receptą su paredaguotais duomenimis ir nauju id. Tai padarome: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="18"><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en" xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;meta charset="ISO-8859-1"&gt;
+    &lt;title&gt;Recepto redagavimas&lt;/title&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="container"&gt;
+    &lt;h1&gt;Recepto redagavimas&lt;/h1&gt;
+    &lt;hr&gt;
+    &lt;h2&gt;Paredaguokite recepto duomenis&lt;/h2&gt;
+
+    &lt;form th:action="@{/recep/idejo_recepta}" th:object="${receptas}" method="POST"&gt;
+        &lt;input type="hidden" th:field="*{id}"&gt;
+        &lt;input th:field="*{pavadinimas}" type="text"  class="form-control mb-4 col-4"&gt;
+        &lt;input th:field="*{nurodymai}" type="text"  class="form-control mb-4 col-4"&gt;
+        &lt;input th:field="*{kalorijosPer100g}" type="number"  class="form-control mb-4 col-4"&gt;
+        &lt;input th:field="*{kaina}" type="number"  class="form-control mb-4 col-4"&gt;
+        &lt;select th:field="*{receptoKategorija.id}" class="form-control" id="dropDownList"&gt;
+            &lt;option th:each="kategorija : ${kategorijos}" th:value="${kategorija.getId()}" th:text="${kategorija.getPavadinimas()}" th:selected="receptoKategorija.id"&gt;&lt;/option&gt;
+        &lt;/select&gt;
+        &lt;button type="submit" class="btn btn-info col-2"&gt;Išsaugokite receptą&lt;/button&gt;
+    &lt;/form&gt;
+
+    &lt;hr&gt;
+
+    &lt;a th:href="@{/}"&gt; Grįžti atgal&lt;/a&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Galime paleisti programą ir ištestuoti metodą. Kai paleisite nuorodą, turėtų įjungti pirmo recepto/filmo/knygos puslapį, kuriame surašyti jo duomenys. Galite pabandyti ką nors pakeisti ir išsaugoti - turėtų veikti. Taigi, turime metodą, kuris gali redaguoti pirmą receptą. Dabar reikėtų pasidaryti, jog kiekvieno recepto puslapyje yra mygtukas, kuris nukreipia į šitą recepto redagavimo puslapį.</li>
+                    <h4>Recepto puslapyje mygtuko kūrimas</h4>
+                    <li>Atsidarau "parodyti_recepta.html" ir jame po lentelės susikuriu formą, kurioje bus tik mygtukas: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Getting Started: Serving Web Content&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;table class="table table-striped"&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Pavadinimas:&lt;/th&gt;
+            &lt;td th:text="${pavadinimas}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Nurodymai:&lt;/th&gt;
+            &lt;td th:text="${nurodymai}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kalorijos per 100 gramų:&lt;/th&gt;
+            &lt;td th:text="${kalorijosPer100g}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kaina:&lt;/th&gt;
+            &lt;td th:text="${kaina}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Ingredientai:&lt;/th&gt;
+            &lt;td&gt;
+                &lt;ul th:each="ingredientas : ${receptoIngredientai}" class="list-group"&gt;
+                    &lt;li th:text="${ingredientas.getPavadinimas()}" class="list-group-item"&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kas sukūrė receptą:&lt;/th&gt;
+            &lt;td th:text="${receptoKurejas.getUsername()}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kategorija:&lt;/th&gt;
+            &lt;td th:text="${receptoKategorija.getPavadinimas()}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+
+    &lt;form method="get"&gt;
+        &lt;input type="submit" value="Redaguoti receptą"&gt;
+    &lt;/form&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Galiu paleisti programą ir puslapį ir turėtų atrodyti štai taip: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot62.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Toliau, sakau, jog form turi th:action, kadangi ji turėtų nusiųsti mus į redagavimo puslapį. Kadangi naudosiu th:action, tai galiu nuorodai kurti naudoti ir kintamuosius. Čia esu Recepto puslapyje, tad aš turiu ir recepto id, todėl sekančiam puslapiui galiu ir perduoti tą id per parametrus. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;form th:action="@{'/recep/redaguoti_recepta/' + ${id}}" method="get"&gt;
+    &lt;input type="submit" value="Redaguoti receptą"&gt;
+&lt;/form&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Tiesa, tą id reikia paduoti šitam puslapiui. Controllerio funkcijoje, kuri atvaizduoja Receptą, turime modeliui paduoti id: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@GetMapping("/test/receptas")
+String testReceptas(Model model, @RequestParam String pavadinimas) {
+    Receptas receptas = receptasRepository.findByPavadinimas(pavadinimas);
+    model.addAttribute("pavadinimas", receptas.getPavadinimas());
+    model.addAttribute("nurodymai", receptas.getNurodymai());
+    model.addAttribute("kalorijosPer100g", receptas.getKalorijosPer100g());
+    model.addAttribute("kaina", receptas.getKaina());
+    model.addAttribute("receptoIngredientai", receptas.getReceptoIngredientai());
+    model.addAttribute("receptoKurejas", receptas.getReceptoKurejas());
+    model.addAttribute("receptoKategorija", receptas.getReceptoKategorija());
+    model.addAttribute("id", receptas.getId());
+    return "parodyti_recepta.html";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Dabar, beliko pakeisti Controllerio funkciją, kuri redaguoja, jog redaguotų visada ne pirmą, o jog redaguotų tą, kurį gauna per nuorodos parametrus. Tiesa, tą truputį darysime kitaip. Sakysime, jog {id} yra nuorodos dalis ir skliaustuose sakysime, jog ją gauna ne per RequestParam o per PathVariable <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@GetMapping("/recep/redaguoti_recepta/{id}")
+String redaguotiRecepta(Model model, @PathVariable long id) {
+    Receptas receptas = receptasRepository.findById(id);
+    model.addAttribute("receptas", receptas);
+    model.addAttribute("kategorijos", kategorijaRepository.findAll());
+    return "recepto_redagavimas.html";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Kai tą atlikome - galima paleisti programą per naujo ir išbandyti redagavimą. Turėtų viskas veikti - nuo recepto radimo su paieška, iki redagavimo mygtuko ir iki pačio redagavimo išsaugojimo.</li>
                 </div>
             </div>
+
+            
         </div>
     </div>
 </body>
