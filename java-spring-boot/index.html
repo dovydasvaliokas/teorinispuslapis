@@ -3123,6 +3123,184 @@ public class ReceptasMVController {
                     </div></li>
                     <li>Ir vėlgi, galima ištestuoti puslapį: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot59.jpg" alt="Kodo foto"></div></span></li>
                     <li>Galime pagal šabloną sudėti kitus paprastų kintamųjų įvedimo laukelius (kainos ir kalorijų).</li>
+                    <li>Iš pradžių, gal ir išbandykime ar veikia receptas su tokiais gan primityviais kintamaisiais (nepriskirsime nei vartotojo, nei kategorijos, nei ingredientų).</li>
+                    <li>Na, tai gal visų pirma, susikurkime Receptas Controlleryje metodą, kurį galima nusikopijuoti iš senojo (be thymeleaf) controllerio, tik nuorodą pasikeisti. Galiausiai, metodas ir controlleris turėtų atrodyti taip: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="47-51"><code class="language-html">package lt.imones.puslapis.projektopavadinimas.controller;
+import lt.imones.puslapis.projektopavadinimas.model.entity.Receptas;
+import lt.imones.puslapis.projektopavadinimas.model.repository.ReceptasRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+@Controller
+public class ReceptasMVController {
+    @Autowired
+    ReceptasRepository receptasRepository;
+
+    @GetMapping("/test/sveikinimas")
+    String testineFunkcija(Model model, @RequestParam String vardas) {
+        model.addAttribute("vardas", vardas);
+        return "testinis_puslapis.html";
+    }
+
+    @GetMapping("/test/receptas")
+    String testReceptas(Model model, @RequestParam String pavadinimas) {
+        Receptas receptas = receptasRepository.findByPavadinimas(pavadinimas);
+        model.addAttribute("pavadinimas", receptas.getPavadinimas());
+        model.addAttribute("nurodymai", receptas.getNurodymai());
+        model.addAttribute("kalorijosPer100g", receptas.getKalorijosPer100g());
+        model.addAttribute("kaina", receptas.getKaina());
+        model.addAttribute("receptoIngredientai", receptas.getReceptoIngredientai());
+        model.addAttribute("receptoKurejas", receptas.getReceptoKurejas());
+        model.addAttribute("receptoKategorija", receptas.getReceptoKategorija());
+        return "parodyti_recepta.html";
+    }
+
+    @GetMapping("/test/paieska")
+    String testPaieska(Model model) {
+        return "rasti_recepta.html";
+    }
+
+    @GetMapping("/receptas/idejimas")
+    String receptoIdejomas(Model model) {
+        return "ideti_recepta.html";
+    }
+
+    @PostMapping("/recep/idejo_recepta")
+    String pridetiRecepta(@RequestBody Receptas ivedamasReceptas) {
+        receptasRepository.save(ivedamasReceptas);
+        return "idetas_receptas.html";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Na, ir kadangi šitas metodas nukreipia į "idetas_receptas.html" HTML failą, tai reikia ir jį susikurti. Jį darysime labai primityvų, tiesiog viena pastraipa, kuri išveda, jog recepta įdėtas. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot60.jpg" alt=""></div></span></li>
+                    <li>Toliau, su Thymeleaf'o žymėjimais, nusakome į kokią nuorodą nuves formos mygtuko paspaudimas. Nors ir mygtukas pas mus yra input:submit, bet vis vien th:action rašome formai, kadangi ji siunčia duomenis, kai jos VIDINIS input:submit arba button:submit yra paspaustas. Tai prirašome th:action prie formos ir nurodome į kurią nuorodą šitas mygtukas turėtų kreiptis: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="17"><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en" xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;meta charset="ISO-8859-1"&gt;
+    &lt;title&gt;Recepto įdėjimas&lt;/title&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="container"&gt;
+    &lt;h1&gt;Recepto įdėjimas&lt;/h1&gt;
+    &lt;hr&gt;
+    &lt;h2&gt;Įveskite recepto duomenis&lt;/h2&gt;
+
+    &lt;form th:action="@{/recep/idejo_recepta}" method="POST"&gt;
+        &lt;input type="text"  placeholder="Recepto pavadinimas" class="form-control mb-4 col-4"&gt;
+        &lt;input type="text"  placeholder="Recepto nurodymai" class="form-control mb-4 col-4"&gt;
+        &lt;input type="number"  placeholder="Kalorijos 100g" class="form-control mb-4 col-4"&gt;
+        &lt;input type="number"  placeholder="Kaina" class="form-control mb-4 col-4"&gt;
+        &lt;button type="submit" class="btn btn-info col-2"&gt;Išsaugokite receptą&lt;/button&gt;
+    &lt;/form&gt;
+
+    &lt;hr&gt;
+
+    &lt;a th:href="@{/}"&gt; Grįžti atgal&lt;/a&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Taip pat, reikia nusakyti, jog šita forma grąžins Objektą ir tas Objektas bus Receptas: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="17"><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en" xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;meta charset="ISO-8859-1"&gt;
+    &lt;title&gt;Recepto įdėjimas&lt;/title&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="container"&gt;
+    &lt;h1&gt;Recepto įdėjimas&lt;/h1&gt;
+    &lt;hr&gt;
+    &lt;h2&gt;Įveskite recepto duomenis&lt;/h2&gt;
+
+    &lt;form th:action="@{/recep/idejo_recepta}" th:object="${receptas}" method="POST"&gt;
+        &lt;input type="text"  placeholder="Recepto pavadinimas" class="form-control mb-4 col-4"&gt;
+        &lt;input type="text"  placeholder="Recepto nurodymai" class="form-control mb-4 col-4"&gt;
+        &lt;input type="number"  placeholder="Kalorijos 100g" class="form-control mb-4 col-4"&gt;
+        &lt;input type="number"  placeholder="Kaina" class="form-control mb-4 col-4"&gt;
+        &lt;button type="submit" class="btn btn-info col-2"&gt;Išsaugokite receptą&lt;/button&gt;
+    &lt;/form&gt;
+
+    &lt;hr&gt;
+
+    &lt;a th:href="@{/}"&gt; Grįžti atgal&lt;/a&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Dabar, visiems (bent jau paprastiems) įvedimo laukeliams, reikia sužymėti kokie kintamieji į juos įvedami. Prie kiekvieno laukelio rašome th:field ir tada viduje žvaigždutė, riestinis skliaustas ir kintamojo pavadinimas. P.S. Kintamojo pavadinimas turėtų sutapti su to objekto kintamųjų pavadinimais. Tai pas mane objektas bus receptas, tai pavadinimai turėtų sutapti su Receptas klasės kintamųjų pavadinimais. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en" xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;meta charset="ISO-8859-1"&gt;
+    &lt;title&gt;Recepto įdėjimas&lt;/title&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="container"&gt;
+    &lt;h1&gt;Recepto įdėjimas&lt;/h1&gt;
+    &lt;hr&gt;
+    &lt;h2&gt;Įveskite recepto duomenis&lt;/h2&gt;
+
+    &lt;form th:action="@{/recep/idejo_recepta}" th:object="${receptas}" method="POST"&gt;
+        &lt;input th:field="*{pavadinimas}" type="text"  placeholder="Recepto pavadinimas" class="form-control mb-4 col-4"&gt;
+        &lt;input th:field="*{nurodymai}" type="text"  placeholder="Recepto nurodymai" class="form-control mb-4 col-4"&gt;
+        &lt;input th:field="*{kalorijosPer100g}" type="number"  placeholder="Kalorijos 100g" class="form-control mb-4 col-4"&gt;
+        &lt;input th:field="*{kaina}" type="number"  placeholder="Kaina" class="form-control mb-4 col-4"&gt;
+        &lt;button type="submit" class="btn btn-info col-2"&gt;Išsaugokite receptą&lt;/button&gt;
+    &lt;/form&gt;
+
+    &lt;hr&gt;
+
+    &lt;a th:href="@{/}"&gt; Grįžti atgal&lt;/a&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    
                 </div>
             </div>
         </div>
