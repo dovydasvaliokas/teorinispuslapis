@@ -3124,9 +3124,9 @@ public class ReceptasMVController {
                     <li>Ir vėlgi, galima ištestuoti puslapį: <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot59.jpg" alt="Kodo foto"></div></span></li>
                     <li>Galime pagal šabloną sudėti kitus paprastų kintamųjų įvedimo laukelius (kainos ir kalorijų).</li>
                     <li>Iš pradžių, gal ir išbandykime ar veikia receptas su tokiais gan primityviais kintamaisiais (nepriskirsime nei vartotojo, nei kategorijos, nei ingredientų).</li>
-                    <li>Na, tai gal visų pirma, susikurkime Receptas Controlleryje metodą, kurį galima nusikopijuoti iš senojo (be thymeleaf) controllerio, tik nuorodą pasikeisti. Galiausiai, metodas ir controlleris turėtų atrodyti taip: <div class="spoiler">
+                    <li>Na, tai gal visų pirma, susikurkime Receptas Controlleryje metodą, kurį galima nusikopijuoti iš senojo (be thymeleaf) controllerio, tik nuorodą pasikeisti. Taip pat vietoj @RequestParam turėtų būti @ModelAttribute. Galiausiai, metodas ir controlleris turėtų atrodyti taip: <div class="spoiler">
                         <div class="spoiler-content">
-                            <pre data-line="47-51"><code class="language-html">package lt.imones.puslapis.projektopavadinimas.controller;
+                            <pre data-line="47-51"><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
 import lt.imones.puslapis.projektopavadinimas.model.entity.Receptas;
 import lt.imones.puslapis.projektopavadinimas.model.repository.ReceptasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -3173,7 +3173,7 @@ public class ReceptasMVController {
     }
 
     @PostMapping("/recep/idejo_recepta")
-    String pridetiRecepta(@RequestBody Receptas ivedamasReceptas) {
+    String pridetiRecepta(@ModelAttribute Receptas ivedamasReceptas) {
         receptasRepository.save(ivedamasReceptas);
         return "idetas_receptas.html";
     }
@@ -3300,7 +3300,182 @@ public class ReceptasMVController {
                             <button></button>
                         </div>
                     </div></li>
+                    <li>Dabar, reikia šitam puslapiui paduoti Receptas objektą (per model). Tai įrašome Controllerio klasėje. Sukuriame tuščią Receptas objektą ir jį paduodame Thymeleaf'ui per model, kadangi HTML jį (vartotojas) užpildys ir persiųs toliau. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@GetMapping("/receptas/idejimas")
+String receptoIdejomas(Model model) {
+    Receptas receptas = new Receptas();
+    model.addAttribute("receptas", receptas);
+    return "ideti_recepta.html";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Galima paleisti programą iš naujo ir išbandyti Recepto įdėjimą. Pakol kas vartotojo/ingredientų/kategorijos neįdeda, bet vis vien galime išsibandyti primityvius kintamuosius, jeigu receptą įdeda su jais - galime eiti toliau.</li>
+                    <li>Toliau, tam pačiam HTML faile darysime, jog įdedant Receptą galima pasirinkti jo kategoriją. Tai HTML form viduje susikursime "pasirinkimo" elemenetą: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="22-25"><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en" xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;meta charset="ISO-8859-1"&gt;
+    &lt;title&gt;Recepto įdėjimas&lt;/title&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="container"&gt;
+    &lt;h1&gt;Recepto įdėjimas&lt;/h1&gt;
+    &lt;hr&gt;
+    &lt;h2&gt;Įveskite recepto duomenis&lt;/h2&gt;
+
+    &lt;form th:action="@{/recep/idejo_recepta}" th:object="${receptas}" method="POST"&gt;
+        &lt;input th:field="*{pavadinimas}" type="text"  placeholder="Recepto pavadinimas" class="form-control mb-4 col-4"&gt;
+        &lt;input th:field="*{nurodymai}" type="text"  placeholder="Recepto nurodymai" class="form-control mb-4 col-4"&gt;
+        &lt;input th:field="*{kalorijosPer100g}" type="number"  placeholder="Kalorijos 100g" class="form-control mb-4 col-4"&gt;
+        &lt;input th:field="*{kaina}" type="number"  placeholder="Kaina" class="form-control mb-4 col-4"&gt;
+        &lt;select class="form-control" id="dropDownList"&gt;
+            &lt;option value="0"&gt;Pasirinkite kategoriją&lt;/option&gt;
+            &lt;option&gt;&lt;/option&gt;
+        &lt;/select&gt;
+        &lt;button type="submit" class="btn btn-info col-2"&gt;Išsaugokite receptą&lt;/button&gt;
+    &lt;/form&gt;
+
+    &lt;hr&gt;
+
+    &lt;a th:href="@{/}"&gt; Grįžti atgal&lt;/a&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Selected elementas tai teisiog pasako, jog bus pasirinkimo elementas. Pirmas Option pasako koks bus iš pradžių pasirinkimas - jame tiesiog įrašyti žodžiai, kad pasirinkti kategoriją. Antras option pakol kas tuščias bet jame įrašysime su Thymeleaf pagalba, kad atvaizduotų visas kategorijas skirtinguose optionuose. Tai iš pradžių sakome su th:each kad optionsuose reikės atkartoti kažkokį listą. Tas list'as yra kategorijų. Tai užsirašo: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;select class="form-control" id="dropDownList"&gt;
+    &lt;option value="0"&gt;Pasirinkite kategoriją&lt;/option&gt;
+    &lt;option th:each="kategorija : ${kategorijos}"&gt;&lt;/option&gt;
+&lt;/select&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Toliau, reikia parašyti kokią reikšmę perduos šitas laukelis, jeigu pasirinks būtent jį. Tai atsiminkite, kiekvienai kategorijai bus sukurta po vieną šitą option. Tai jeigu pasirenka būtent kažkurį option, tai tiesiog turėtų perduoti tos kategorijos id - taip žinosime, kurią kategoriją pasirinko. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;select class="form-control" id="dropDownList"&gt;
+    &lt;option value="0"&gt;Pasirinkite kategoriją&lt;/option&gt;
+    &lt;option th:each="kategorija : ${kategorijos}" th:value="${kategorija.getId()}"&gt;&lt;/option&gt;
+&lt;/select&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Sekantis žingsnis, pasakyti ką atvaizduos ant kiekvieno pasirinkimo. Na tai kategorija turi tik id ir pavadinimą, o id nelabai apsimoka atvaizduoti vizualiai, tai atvaizduosime pavadinimą. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;select class="form-control" id="dropDownList"&gt;
+    &lt;option value="0"&gt;Pasirinkite kategoriją&lt;/option&gt;
+    &lt;option th:each="kategorija : ${kategorijos}" th:value="${kategorija.getId()}" th:text="${kategorija.getPavadinimas()}"&gt;&lt;/option&gt;
+&lt;/select&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Dabar jau galime paduoti visas kategorijas model'iui Controllerio funkcijoje: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@GetMapping("/receptas/idejimas")
+String receptoIdejomas(Model model) {
+    Receptas receptas = new Receptas();
+    model.addAttribute("receptas", receptas);
+    model.addAttribute("kategorijos", kategorijaRepository.findAll());
+    return "ideti_recepta.html";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Galite paleisti programą ir išbandyti puslapį. Dabar jau galite suvesti duomenis bei pasirinkti kategoriją. Tiesa, dar nors ir pasirinksite kategoriją ir pridėsite receptą/filmą/knygą, ta kategorija neprisidės. Tą dar padarysime. Tačiau, bet kokiu atveju siūlyčiau išsitestuoti dabar, jog pažiūrėti ar veikia pats kategorijų atvaizdavimas ir pasirnkimas. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot61.jpg" alt="Kodo foto"></div></span></li>
+                    <li>Jeigu viskas veikia kaip viršutiniame paveiksliukyje, tai galima prirašyti, jog šis pasirinkimo laukelis yra receptoKategorija kintamasis: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;select th:field="*receptoKategorija" class="form-control" id="dropDownList"&gt;
+    &lt;option value="0"&gt;Pasirinkite kategoriją&lt;/option&gt;
+    &lt;option th:each="kategorija : ${kategorijos}" th:value="${kategorija.getId()}" th:text="${kategorija.getPavadinimas()}"&gt;&lt;/option&gt;
+&lt;/select&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Dabar jau galime išbandyti pilnai - turi įdėti receptą bei kai pasirenkam kategoriją ją priskiria receptui.</li>
                     
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section1">Recepto redagavimas naudojant Thymeleaf</h3>
+                </div>
+                <div class="theory-text">
+                    <li>Iš funkcinės esmės redagavimas nesiskiria nuo įdėjimo. Na, bent jau kas vyksta užkulisiuose, kadangi ir ten, ir ten naudotume tą patį repository save() metodą ir tiesiog įdėtume receptą naują ar atnaujintą.</li>
+                    <li>Na, bet iš vizualios pusės, tai truputį skiriasi. Kadangi HTML'e mums reikia padaryti ne tuščius įvedimo laukelius, o būtent to recepto, jog vartotojas galėtų redaguoti. Tai realiai reikės tiesiog </li>
+                    <li>Na, tai iš pat pradžių susikursiu puslapį, kuriame pagal recepto id suranda receptą ir jį atvaizduoja įvedimo laukeliuose, jog galėtume redaguoti. Į šį puslapį atves mygtukas iš recepto puslapio, bet apie tai vėliau, pirmiau pasidarykime redagavimo html šabloną.</li>
+                    <li>Susikuriu "recepto_redagavimas.html" šabloną su tokia pačia forma kaip įdėjimui tik dar be jokių th žymėjimų: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en" xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;meta charset="ISO-8859-1"&gt;
+    &lt;title&gt;Recepto redagavimas&lt;/title&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="container"&gt;
+    &lt;h1&gt;Recepto įdėjimas&lt;/h1&gt;
+    &lt;hr&gt;
+    &lt;h2&gt;Įveskite recepto duomenis&lt;/h2&gt;
+
+    &lt;form method="POST"&gt;
+        &lt;input type="text" class="form-control mb-4 col-4"&gt;
+        &lt;input type="text"  placeholder="Recepto nurodymai" class="form-control mb-4 col-4"&gt;
+        &lt;input type="number"  placeholder="Kalorijos 100g" class="form-control mb-4 col-4"&gt;
+        &lt;input type="number"  placeholder="Kaina" class="form-control mb-4 col-4"&gt;
+        &lt;select class="form-control" id="dropDownList"&gt;
+            &lt;option value="0"&gt;Pasirinkite kategoriją&lt;/option&gt;
+            &lt;option&gt;&lt;/option&gt;
+        &lt;/select&gt;
+        &lt;button type="submit" class="btn btn-info col-2"&gt;Išsaugokite receptą&lt;/button&gt;
+    &lt;/form&gt;
+
+    &lt;hr&gt;
+
+    &lt;a th:href="@{/}"&gt; Grįžti atgal&lt;/a&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
                 </div>
             </div>
         </div>
