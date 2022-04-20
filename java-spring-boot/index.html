@@ -3598,7 +3598,7 @@ String redaguotiRecepta(Model model) {
                         </div>
                     </div></li>
                     <li>Galime paleisti programą ir ištestuoti metodą. Kai paleisite nuorodą, turėtų įjungti pirmo recepto/filmo/knygos puslapį, kuriame surašyti jo duomenys. Galite pabandyti ką nors pakeisti ir išsaugoti - turėtų veikti. Taigi, turime metodą, kuris gali redaguoti pirmą receptą. Dabar reikėtų pasidaryti, jog kiekvieno recepto puslapyje yra mygtukas, kuris nukreipia į šitą recepto redagavimo puslapį.</li>
-                    <h4>Recepto puslapyje mygtuko kūrimas</h4>
+                    <h4>Recepto puslapyje redagavimo mygtuko kūrimas</h4>
                     <li>Atsidarau "parodyti_recepta.html" ir jame po lentelės susikuriu formą, kurioje bus tik mygtukas: <div class="spoiler">
                         <div class="spoiler-content">
                             <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
@@ -3709,6 +3709,60 @@ String redaguotiRecepta(Model model, @PathVariable long id) {
                         </div>
                     </div></li>
                     <li>Kai tą atlikome - galima paleisti programą per naujo ir išbandyti redagavimą. Turėtų viskas veikti - nuo recepto radimo su paieška, iki redagavimo mygtuko ir iki pačio redagavimo išsaugojimo.</li>
+                    <li>Tačiau, tiesa, nors ir viskas veikia - galime rasti receptą, jį paredaguoti ir paredagavimas iš tikrųjų išsisaugo duomenų bazėje, tačiau redagavime aš padariau, jog nebūtų galima redaguoti receptoKurejas. Na, nes bet kokiu atveju, turėtų kūrėjas išlikti kaip ir tas pats. Tačiau, kadangi nepadarau jokio input'o receptoKurejas kintamajam, tai jo neperduoda į kitą funkciją, todėl vartotojo_id gaunasi NULL ir taip "sugenda" mūsų paredaguotas receptas.</li>
+                    <li>Todėl, norint, jog viskas veiktų sklandžiai - reikia perduoti receptoKurejas / vartotojo_id per hidden input. Taigi HTML šablone įdedu šią (19) eilutę: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="19"><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en" xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;meta charset="ISO-8859-1"&gt;
+    &lt;title&gt;Recepto redagavimas&lt;/title&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="container"&gt;
+    &lt;h1&gt;Recepto redagavimas&lt;/h1&gt;
+    &lt;hr&gt;
+    &lt;h2&gt;Paredaguokite recepto duomenis&lt;/h2&gt;
+
+    &lt;form th:action="@{/recep/idejo_recepta}" th:object="${receptas}" method="POST"&gt;
+        &lt;input type="hidden" th:field="*{id}"&gt;
+        &lt;input type="hidden" th:field="*{receptoKurejas.id}"&gt;
+        &lt;input th:field="*{pavadinimas}" type="text"  class="form-control mb-4 col-4"&gt;
+        &lt;input th:field="*{nurodymai}" type="text"  class="form-control mb-4 col-4"&gt;
+        &lt;input th:field="*{kalorijosPer100g}" type="number"  class="form-control mb-4 col-4"&gt;
+        &lt;input th:field="*{kaina}" type="number"  class="form-control mb-4 col-4"&gt;
+        &lt;select th:field="*{receptoKategorija.id}" class="form-control" id="dropDownList"&gt;
+            &lt;option th:each="kategorija : ${kategorijos}" th:value="${kategorija.getId()}" th:text="${kategorija.getPavadinimas()}" th:selected="receptoKategorija.id"&gt;&lt;/option&gt;
+        &lt;/select&gt;
+        &lt;button type="submit" class="btn btn-info col-2"&gt;Išsaugokite receptą&lt;/button&gt;
+    &lt;/form&gt;
+
+    &lt;hr&gt;
+
+    &lt;a th:href="@{/}"&gt; Grįžti atgal&lt;/a&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section">Recepto ištrynimas naudojant Thymeleaf</h3>
+                </div>
+            
+                <div class="theory-text">
+                    
                 </div>
             </div>
 
