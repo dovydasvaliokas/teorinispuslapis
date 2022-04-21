@@ -4164,8 +4164,20 @@ public class VartotojasMVController {
                             <button></button>
                         </div>
                     </div> </li>
-                    <li>Toliau, reikia pasiredaguoti/patobulinti šį metodą. Visų pirma, tai metodas turėtų gauti Recepto duomenis - jog galėtume žinotu kurį receptą vartotojas bando pamėgti.</li>
-                    <li>Galima būtų viską analogiškai atkartoti kaip ir praeitiems pavyzdžiams. Daryti, jog metodas gauna PathVariable, jog metodo nuoroda savo "viduje" turi tą {id} riestiniuos skliaustuos. Na, viską kaip darėme prieš tai. Tam yra tam tikras minusas, mes galime taip paduoti nebent tik id arba kokį kitą primityvų kintamąjį, tačiau viso objekto per nuorodą paduoti negalime. Kai paduodame tik id, tai kitame puslapyje naudojant kitą metodą VĖL reikia kreiptis į duomenų bazę, jog mums surastų Receptą su tuo id. Kai tuo tarpu, jeigu iš vieno puslapio perduotume objektą į kitą puslapį </li>
+                    <li>Toliau, reikia pasiredaguoti/patobulinti šį metodą. Visų pirma, tai metodas turėtų gauti Recepto duomenis - jog galėtume žinotu kurį receptą vartotojas bando pamėgti. Darome viską analogiškai kaip ir ankstesniems pavyzdžiams. Parašome, jog metodass gauna PathVariable id bei taip pat, jog nuorodoje yra {id} riestiniuose skliaustuose. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@PostMapping("/vartotojas/pamego_recepta/{id}")
+String pamegtiRecepta(@PathVariable long receptoId){
+    
+    return "pamegtas_receptas";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li></li>
                 </div>
             </div>
 
