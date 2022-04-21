@@ -3762,7 +3762,410 @@ String redaguotiRecepta(Model model, @PathVariable long id) {
                 </div>
             
                 <div class="theory-text">
+                    <li>Recepto ištrynimas, po įdėjimo ir redagavimo, tikriausiai yra lengviausias dalykas, kurį padarysime. Pats principas, bus atliekamas tokiu pat būdu kaip ir redagavimas - pirma reikia įeiti į Recepto puslapį, jame bus "Ištrinti" mygtukas (panašiai, kaip ir jau yra "Redaguoti" mygtukas) ir paspaudus tą mygtuką iš karto ištrins tą receptą.</li>
+                    <li>Susikuriame mygtuką "parodyti_recpepta.html" šablone (na arba jūsų šablone, kur rodo knygą/filmą/skelbimą/autoservisą. (52-54) <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="52-54"><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Getting Started: Serving Web Content&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;table class="table table-striped"&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Pavadinimas:&lt;/th&gt;
+            &lt;td th:text="${pavadinimas}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Nurodymai:&lt;/th&gt;
+            &lt;td th:text="${nurodymai}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kalorijos per 100 gramų:&lt;/th&gt;
+            &lt;td th:text="${kalorijosPer100g}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kaina:&lt;/th&gt;
+            &lt;td th:text="${kaina}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Ingredientai:&lt;/th&gt;
+            &lt;td&gt;
+                &lt;ul th:each="ingredientas : ${receptoIngredientai}" class="list-group"&gt;
+                    &lt;li th:text="${ingredientas.getPavadinimas()}" class="list-group-item"&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kas sukūrė receptą:&lt;/th&gt;
+            &lt;td th:text="${receptoKurejas.getUsername()}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kategorija:&lt;/th&gt;
+            &lt;td th:text="${receptoKategorija.getPavadinimas()}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+
+    &lt;form th:action="@{'/recep/redaguoti_recepta/' + ${id}}" method="get"&gt;
+        &lt;input type="submit" value="Redaguoti receptą"&gt;
+    &lt;/form&gt;
+
+    &lt;form th:action="@{'/recep/istrinti_recepta/' + ${id}}" method="post"&gt;
+        &lt;input type="submit" value="Ištrinti receptą"&gt;
+    &lt;/form&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Tiesa, jeigu pastebėjote - redagavimui forma turi GET metodą, o ištrinimui padariau, jog POST. Nors ir galiausiai abu veiksmai atlieka POST užklausą, nes GET tik gavimo užklausa, o keitimo/įdėjimo/ištrinimo yra POST. Tačiau, redagavimo mygtukas iš pradžių dar nukelia į puslapį, kuriame gauname visą recepto informaciją įvedimo laukeliuose ir galime ją keisti ir tik tada paspaudę dar kitą mygtuką (kuris yra POST) pakeisime receptą. Taigi, pirma gauname recepto duomenis į įvedimo laukelis (GET) ir tada pakeitę juos nusiunčiame su POST. O ištrynimui, mums duomenų gauti nereikia papildomai, tad iš karto galime daryti ištrynimą su POST.</li>
+                    <li>Galima, išsitestuoti - pasižiūrėti ar puslapyje atvaizduoja mygtuką ir nemeta errorų. <span class="open-image"><img src="../assets/img/img.png" alt="Paveiksliukas rodantis du paveiksliukus, skirtas atidaryti paveiksliuką"><div><img src="../assets/img/java-spring-boot/screenshot63.jpg" alt=""></div></span></li>
+                    <li>Toliau, galime kurtis Controllerio metodą, kuris gauna kažkokį ID (paspaudus mygtuką nusiųs recepto id) ir ištrina tą Receptą. Id darysime, jog gauna vėl per PathVariable. (69-73) (tiesa, galima tiek šitam, tiek praeituose ir kitais būdais) <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+import lt.imones.puslapis.projektopavadinimas.model.entity.Kategorija;
+import lt.imones.puslapis.projektopavadinimas.model.entity.Receptas;
+import lt.imones.puslapis.projektopavadinimas.model.repository.KategorijaRepository;
+import lt.imones.puslapis.projektopavadinimas.model.repository.ReceptasRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+
+@Controller
+public class ReceptasMVController {
+    @Autowired
+    ReceptasRepository receptasRepository;
+
+    @Autowired
+    KategorijaRepository kategorijaRepository;
+
+    @GetMapping("/test/sveikinimas")
+    String testineFunkcija(Model model, @RequestParam String vardas) {
+        model.addAttribute("vardas", vardas);
+        return "testinis_puslapis.html";
+    }
+
+    @GetMapping("/test/receptas")
+    String testReceptas(Model model, @RequestParam String pavadinimas) {
+        Receptas receptas = receptasRepository.findByPavadinimas(pavadinimas);
+        model.addAttribute("pavadinimas", receptas.getPavadinimas());
+        model.addAttribute("nurodymai", receptas.getNurodymai());
+        model.addAttribute("kalorijosPer100g", receptas.getKalorijosPer100g());
+        model.addAttribute("kaina", receptas.getKaina());
+        model.addAttribute("receptoIngredientai", receptas.getReceptoIngredientai());
+        model.addAttribute("receptoKurejas", receptas.getReceptoKurejas());
+        model.addAttribute("receptoKategorija", receptas.getReceptoKategorija());
+        model.addAttribute("id", receptas.getId());
+        return "parodyti_recepta.html";
+    }
+
+    @GetMapping("/test/paieska")
+    String testPaieska(Model model) {
+        return "rasti_recepta.html";
+    }
+
+    @GetMapping("/receptas/idejimas")
+    String receptoIdejomas(Model model) {
+        Receptas receptas = new Receptas();
+        model.addAttribute("receptas", receptas);
+        model.addAttribute("kategorijos", kategorijaRepository.findAll());
+        return "ideti_recepta.html";
+    }
+
+
+    @PostMapping("/recep/idejo_recepta")
+    String pridetiRecepta(@ModelAttribute Receptas ivedamasReceptas) {
+        receptasRepository.save(ivedamasReceptas);
+        return "idetas_receptas.html";
+    }
+
+
+    @GetMapping("/recep/redaguoti_recepta/{id}")
+    String redaguotiRecepta(Model model, @PathVariable long id) {
+        Receptas receptas = receptasRepository.findById(id);
+        model.addAttribute("receptas", receptas);
+        model.addAttribute("kategorijos", kategorijaRepository.findAll());
+        return "recepto_redagavimas.html";
+    }
+
+    @PostMapping("/recep/istrinti_recepta/{id}")
+    String istrintiRecepta(Model model, @PathVariable long id) {
+        receptasRepository.delete(receptasRepository.findById(id));
+        return "istrintas_receptas.html";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Kaip matote viršutiniame kode, Recepto Repository ištrina tą receptą iš duomenų bazės, kurį randa pagal gautą id. Kitaip sakant ištrins tą receptą, kurio puslapyje buvome prieš tai. Na ir galiausiai grąžina "istrintas_receptas.html" puslapio šabloną - jame turėtų dabar tiesiog būti žodžiai "Sėkmingai ištrinta" ar panašiai. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en" xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;meta charset="ISO-8859-1"&gt;
+    &lt;title&gt;Ištrintas receptas&lt;/title&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;p&gt;Sėkmingai ištrynė receptą.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Belieka, paleisti programą per naujo ir išbandyti puslapį. Susirandu "Grikių košė" receptą per paiešką ir paspaudžiu ant "Ištrinti" mygtuko. Viskas veikia - iš duomenų bazės ištrynė tą receptą.</li>
                     
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section">Recepto pridėjimas į "favoritus".</h3>
+                </div>
+            
+                <div class="theory-text">
+                    <li>Šioje skiltyje, pasižiūrėsime kaip galima būtų susieti Receptas su Vartotojas, jog kiekvienas Vartotojas ne tik gali sukurti receptą, bet jį ir "pamėgti"/"įsidėti" į favoritus. P.S. Jeigu jums reikia pavyzdžio kaip "įvertinti", o ne pamėgti receptą, tai sekanti skiltis. Arba jeigu jums reikia pavyzdžio kaip "įrašyti komentarą", o ne tik pažymėti receptą, tai irgi sekanti skiltis.</li>
+                    <li>Visų pirma, reikia nusakyti šią naują jungti, kadangi anksčiau jos buvau nepadaręs. Taigi, Vartotojas entity padarau jungtį iš vartotojas pusės. Vienas vartotojas gali turėti daug mėgiamų knygų bei taip pat ir knygą gali mėgti daug skirtingų vartotojų - todėl jungtis bus Many-To-Many. <div class="spoiler">
+                        <div class="spoiler-content">
+<pre data-line="30-36"><code class="language-java">package lt.imones.puslapis.projektopavadinimas.model.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+public class Vartotojas {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private String username;
+    private String password;
+    private boolean enabled;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "vartotojo_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set&lt;Role&gt; roles = new HashSet&lt;&gt;();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "receptoKurejas")
+    private Set&lt;Receptas&gt; vartotojoReceptai;
+
+    @ManyToMany
+    @JoinTable(
+            name = "vartotoju_megstami_receptai",
+            joinColumns = @JoinColumn(name = "vartotojo_id"),
+            inverseJoinColumns = @JoinColumn(name = "receptas_id")
+    )
+    private Set&lt;Receptas&gt; megstamiReceptai;
+
+... toliau konstruktoriai, getteriai/setteriai failo
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Toliau, reikia šitą jungties kitą pusę pasirašyti Receptas entity klasėje: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="32-38"><code class="language-java">package lt.imones.puslapis.projektopavadinimas.model.entity;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Set;
+
+@Entity
+public class Receptas {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private String pavadinimas;
+    private String nurodymai;
+    private int kalorijosPer100g;
+    private double kaina;
+
+    @ManyToMany
+    @JoinTable(
+            name = "sujungimas_receptas_ingredientas",
+            joinColumns = @JoinColumn(name = "receptas_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredientas_id"))
+    private Set&lt;Ingredientas&gt; receptoIngredientai;
+
+    @ManyToOne
+    @JoinColumn(name = "vartotojas_id")
+    private Vartotojas receptoKurejas;
+
+    @ManyToOne
+    @JoinColumn(name = "kategorija_id")
+    private Kategorija receptoKategorija;
+
+    @ManyToMany
+    @JoinTable(
+            name = "vartotoju_megstami_receptai",
+            joinColumns = @JoinColumn(name = "receptas_id"),
+            inverseJoinColumns = @JoinColumn(name = "vartotojo_id")
+    )
+    private Set&lt;Vartotojas&gt; vartotojaiKurieMegsta;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Dabar, galime jau pasidaryti šabloną HTML'e. Tačiau, mums naujo puslapio daryti nereikia, kadangi vėlgi "Pamėgti receptą" tai greičiausiai, logiškiausia, būtų pasidaryti, jog Recepto puslapyje paprasčiausiai yra mygtukas, kuris pamėgsta tą receptą.</li>
+                    <li>Taigi, vėl, analogiškai kaip ir Redagavimui bei Ištrynimui - susikuriu mygtuką html šablone. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="56-58"><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Getting Started: Serving Web Content&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;table class="table table-striped"&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Pavadinimas:&lt;/th&gt;
+            &lt;td th:text="${pavadinimas}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Nurodymai:&lt;/th&gt;
+            &lt;td th:text="${nurodymai}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kalorijos per 100 gramų:&lt;/th&gt;
+            &lt;td th:text="${kalorijosPer100g}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kaina:&lt;/th&gt;
+            &lt;td th:text="${kaina}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Ingredientai:&lt;/th&gt;
+            &lt;td&gt;
+                &lt;ul th:each="ingredientas : ${receptoIngredientai}" class="list-group"&gt;
+                    &lt;li th:text="${ingredientas.getPavadinimas()}" class="list-group-item"&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kas sukūrė receptą:&lt;/th&gt;
+            &lt;td th:text="${receptoKurejas.getUsername()}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Kategorija:&lt;/th&gt;
+            &lt;td th:text="${receptoKategorija.getPavadinimas()}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+
+    &lt;form th:action="@{'/recep/redaguoti_recepta/' + ${id}}" method="get"&gt;
+        &lt;input type="submit" value="Redaguoti receptą"&gt;
+    &lt;/form&gt;
+
+    &lt;form th:action="@{'/recep/istrinti_recepta/' + ${id}}" method="post"&gt;
+        &lt;input type="submit" value="Ištrinti receptą"&gt;
+    &lt;/form&gt;
+
+    &lt;form th:action="@{'/vartotojas/pamegti_recepta' + ${id}}" method="post"&gt;
+        &lt;input type="submit" value="Pridėti receptą į mėgstamus"&gt;
+    &lt;/form&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Susikuriu Controlleriui metodą. Tačiau, kadangi čia prie vartotojo masyvo pridėsiu Receptą, tai darysiu tai Vartotojas controllerio pusėje. Iš dalies, tai galima būtų daryti ir Recepto controlleryje daryti, tačiau, manau, jog logiškiau skamba sakyti "Vartotojas pamėgo receptą" nei "Receptas prisidėjo vartotoją prie savo vartotojų, kurie mėgsta šį receptą, sąrašo", todėl tiesiog tai darau Vartotojas controlleryje. Tiesa, Vartotojas controllerio neturėjau, bet jį susikuriame visiškai taip pat, kaip ir praeitus controllerius. Taip pat jame autowirinu VartotojasRepository ir ReceptasRepository bei susikuriu tą metodą, kuris dar pakol kas grąžina tik šablono pavadinimą. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">package lt.imones.puslapis.projektopavadinimas.controller;
+
+import lt.imones.puslapis.projektopavadinimas.model.repository.ReceptasRepository;
+import lt.imones.puslapis.projektopavadinimas.model.repository.VartotojasRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+
+@Controller
+public class VartotojasMVController {
+    @Autowired
+    ReceptasRepository receptasRepository;
+
+    @Autowired
+    VartotojasRepository vartotojasRepository;
+
+    @PostMapping("/vartotojas/pamego_recepta") 
+    String pamegtiRecepta(){
+        
+        return "pamegtas_receptas";
+    }
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Kaip matote - metodo mapping tipas yra POST - kadangi, kai paspausime "Pamėgti" mygtuką, tai mums jokios informacijos neturėtų gauti, tiesiog išvesti "sėkmingai pamėgtas receptas", o vietoj gavimo turėtų ĮDĖTI į duomenų bazę informaciją, jog tam tikras vartotojas mėgsta tam tikrą receptą, todėl bus POST.</li>
+                    <li>Na, tai iš karto susikurkime ir tą primityvų "pamegtas_receptas.html" šabloną:  <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+    &lt;title&gt;Sėkmingai pridėta į favoritus.&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;p&gt;Sveikiname, jūs sėkmingai pridėjote receptą į savo Favoritus. &lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div> </li>
+                    <li>Toliau, reikia pasiredaguoti/patobulinti šį metodą. Visų pirma, tai metodas turėtų gauti Recepto duomenis - jog galėtume žinotu kurį receptą vartotojas bando pamėgti.</li>
+                    <li>Galima būtų viską analogiškai atkartoti kaip ir praeitiems pavyzdžiams. Daryti, jog metodas gauna PathVariable, jog metodo nuoroda savo "viduje" turi tą {id} riestiniuos skliaustuos. Na, viską kaip darėme prieš tai. Tam yra tam tikras minusas, mes galime taip paduoti nebent tik id arba kokį kitą primityvų kintamąjį, tačiau viso objekto per nuorodą paduoti negalime. Kai paduodame tik id, tai kitame puslapyje naudojant kitą metodą VĖL reikia kreiptis į duomenų bazę, jog mums surastų Receptą su tuo id. Kai tuo tarpu, jeigu iš vieno puslapio perduotume objektą į kitą puslapį </li>
                 </div>
             </div>
 
