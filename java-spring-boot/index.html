@@ -4097,7 +4097,7 @@ public class Receptas {
         &lt;input type="submit" value="Ištrinti receptą"&gt;
     &lt;/form&gt;
 
-    &lt;form th:action="@{'/vartotojas/pamegti_recepta' + ${id}}" method="post"&gt;
+    &lt;form th:action="@{'/vartotojas/pamegti_recepta/' + ${id}}" method="post"&gt;
         &lt;input type="submit" value="Pridėti receptą į mėgstamus"&gt;
     &lt;/form&gt;
 
@@ -4127,7 +4127,7 @@ public class VartotojasMVController {
     @Autowired
     VartotojasRepository vartotojasRepository;
 
-    @PostMapping("/vartotojas/pamego_recepta") 
+    @PostMapping("/vartotojas/pamegti_recepta") 
     String pamegtiRecepta(){
         
         return "pamegtas_receptas";
@@ -4166,7 +4166,7 @@ public class VartotojasMVController {
                     </div> </li>
                     <li>Toliau, reikia pasiredaguoti/patobulinti šį metodą. Visų pirma, tai metodas turėtų gauti Recepto duomenis - jog galėtume žinotu kurį receptą vartotojas bando pamėgti. Darome viską analogiškai kaip ir ankstesniems pavyzdžiams. Parašome, jog metodass gauna PathVariable id bei taip pat, jog nuorodoje yra {id} riestiniuose skliaustuose. <div class="spoiler">
                         <div class="spoiler-content">
-                            <pre><code class="language-java">@PostMapping("/vartotojas/pamego_recepta/{id}")
+                            <pre><code class="language-java">@PostMapping("/vartotojas/pamegti_recepta/{id}")
 String pamegtiRecepta(@PathVariable long receptoId){
     
     return "pamegtas_receptas";
@@ -4177,7 +4177,121 @@ String pamegtiRecepta(@PathVariable long receptoId){
                             <button></button>
                         </div>
                     </div></li>
-                    <li></li>
+                    <li>Toliau, reikia gauti, kuris vartotojas prideda Receptą į favoritus. Dažniausiai, tai būtų tas vartotojas, kuris yra prisijungęs dabar. Kadangi prisijungimo mes dar nesame padarę, tai dabar padarysime, jog receptą visad antram vartotojui (galit pasirinkt bet kokį savo). <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@PostMapping("/vartotojas/pamegti_recepta/{id}")
+String pamegtiRecepta(@PathVariable long id){
+    Vartotojas vartotojas = vartotojasRepository.findById(2);
+    return "pamegtas_receptas";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Įdedame receptą (kurio id gauname) į vartotojo mėgstamų receptų setą. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@PostMapping("/vartotojas/pamegti_recepta/{id}")
+String pamegtiRecepta(@PathVariable long id){
+    Vartotojas vartotojas = vartotojasRepository.findById(2);
+    vartotojas.getMegstamiReceptai().add(receptasRepository.findById(id));
+    return "pamegtas_receptas";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Galima įdėjimą išskaldyti ir į du veiksmus, jei tai bus paprasčiau: pirma gauname receptą iš duomenų bazės, tada tą receptą įdedame į vartotojo mėgstsamų receptų setą. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@PostMapping("/vartotojas/pamegti_recepta/{id}")
+String pamegtiRecepta(@PathVariable long id){
+    Vartotojas vartotojas = vartotojasRepository.findById(2);
+    Receptas receptas = receptasRepository.findById(id);
+    vartotojas.getMegstamiReceptai().add(receptas);
+    return "pamegtas_receptas";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Galiausiai reikia tą vartotoją išsaugoti į duomenų bazę. (jog atnaujintume jo mėgstamus receptus) <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre data-line="5"><code class="language-java">@PostMapping("/vartotojas/pamegti_recepta/{id}")
+String pamegtiRecepta(@PathVariable long id){
+    Vartotojas vartotojas = vartotojasRepository.findById(2);
+    vartotojas.getMegstamiReceptai().add(receptasRepository.findById(id));
+    vartotojasRepository.save(vartotojas);
+    return "pamegtas_receptas";
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Kai tai padarėme - reikia išbandyti programą. Paleidžiame per naujo ir paspaudžiame ant mygtuko - turėtų išsaugoti duomenų bazėje.</li>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="section1">Recepto ingredientų pridėjimas. Pirmas variantas: atnaujinant/ką tik sukūrus receptą ir vėl taip pat analogiškai paspaudžiant mygtuką, kuris nuves į kitą puslapį, kuriame suvesime ingredientus</h3>
+                </div>
+                <div class="theory-text">
+                    <li>Vėl - susikuriame mygtuką "parodyti_recepta.html" puslapyje, kaip ir prieš tai buvusius mygtukus. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;form th:action="@{'/recep/ideti_ingredientus/' + ${id}}" method="get"&gt;
+    &lt;input type="submit" value="Pridėti recepto ingredientus"&gt;
+&lt;/form&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Jo metodą rašome GET, nes paspaudę mygtuką ingredientų dar neįdėsime, o tiesiog mus nuves į kitą puslapį, kuriame bus įvedimo laukeliai ir ten surašysime ingredientus.</li>
+                    <li>Galime susikurti controllerio metodą, į kurį yra nuoroda mygtuke. <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-java">@GetMapping("/recep/ideti_ingredientus") 
+String idetiIngredientus(Model model, @PathVariable long id) {
+    return "ingredientu_idejimas"
+}
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Jis grąžina kitą HTML puslapį - tą puslapį dabar ir reikia sukurti. Jame bus įvedimo laukeliai ir mygtukas. Į laukelius įrašysime ingredientų pavadinimus, kuriuos norime pridėti į receptą ir tada paspausime mygtuką, jog juos įdėtume.</li>
+                    <li>Susikuriu "ingredientu_idejimas_recepta.html" failą: <div class="spoiler">
+                        <div class="spoiler-content">
+                            <pre><code class="language-html">&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;Ingredientų įdėjimas į receptą&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code></pre>
+                        </div>
+                        <div class="spoiler-button">
+                            <button></button>
+                        </div>
+                    </div></li>
+                    <li>Puslapyje susikuriu formą</li>
                 </div>
             </div>
 
